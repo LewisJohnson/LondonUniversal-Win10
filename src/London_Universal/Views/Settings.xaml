@@ -1,0 +1,72 @@
+﻿<Page
+    x:Class="London_Universal.Views.Settings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:London_Universal.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" Loading="Settings_OnLoading">
+
+    <ScrollViewer>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Narrow">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MapPanel.(RelativePanel.AlignRightWithPanel)" Value="True" />
+                        
+                        <Setter Target="AboutPanel.(RelativePanel.Below)" Value="MapPanel" />
+                        <Setter Target="AboutPanel.(RelativePanel.RightOf)" Value="" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="Wide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="641" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MapPanel.(RelativePanel.AlignRightWithPanel)" Value="False" />
+                        
+                        <Setter Target="AboutPanel.(RelativePanel.RightOf)" Value="MapPanel" />
+                        <Setter Target="AboutPanel.(RelativePanel.Below)" Value="" />
+
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <RelativePanel Margin="10,0" x:Name="MainPanel">
+            <StackPanel x:Name="MapPanel" RelativePanel.AlignLeftWithPanel="True"  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <TextBlock x:Name="MapHeader" TextWrapping="Wrap" Text="Map" Style="{StaticResource SampleHeaderTextStyle}"  Margin="10"/>
+
+                <ComboBox x:Name="StyleCombo" Header="Style" Margin="10,10" SelectionChanged="StyleCombo_OnSelectionChanged" HorizontalAlignment="Stretch">
+                    <ComboBoxItem Content="Road" Tag="Road"/>
+                    <ComboBoxItem Content="Aerial" Tag="Aerial"/>
+                    <ComboBoxItem Content="Aerial With Roads" Tag="AerialRoadS"/>
+                </ComboBox>
+
+                <ComboBox x:Name="ColourCombo" Header="Colour Scheme"  Margin="10,10"  SelectionChanged="Colour_OnSelectionChanged" HorizontalAlignment="Stretch">
+                    <ComboBoxItem Content="Light"/>
+                    <ComboBoxItem Content="Dark"/>
+                </ComboBox>
+
+                <MenuFlyoutSeparator/>
+
+                <CheckBox x:Name="LandMarksCheckBox"  Margin="10,0" Click="Features_OnClick" Tag="LandMarks"     Content="Show 3D Landmarks"/>
+                <CheckBox  x:Name="TrafficCheckBox" Margin="10,0" Click="Features_OnClick" Tag="Traffic"       Content="Show Traffic"/>
+                <CheckBox  x:Name="BusinessCheckBox" Margin="10,0" Click="Features_OnClick" Tag="Businesses"       Content="Show Business Landmarks"/>
+                <CheckBox  x:Name="PedeCheckBox" Margin="10,0" Click="Features_OnClick" Tag="Pede"          Content="Show Pedestrians Features"/>
+                <CheckBox  x:Name="ControlsCheckBox"  Margin="10,0" Click="Features_OnClick" Tag="ForceControls" Content="Force Onscreen Controls"/>
+
+            </StackPanel>
+            <StackPanel x:Name="AboutPanel" RelativePanel.RightOf="MapPanel"  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <TextBlock TextWrapping="Wrap" Text=" " Style="{StaticResource SampleHeaderTextStyle}"  Margin="10"/>
+
+            </StackPanel>
+
+        </RelativePanel>
+    </ScrollViewer>
+</Page>

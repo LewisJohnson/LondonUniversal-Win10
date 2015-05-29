@@ -1,0 +1,65 @@
+﻿<Page
+    x:Class="London_Universal.Views.FullMap"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:maps="using:Windows.UI.Xaml.Controls.Maps"
+    mc:Ignorable="d" 
+    Loading="MapPage_Loading" Loaded="MapPage_OnLoaded" SizeChanged="FullMap_OnSizeChanged">
+
+    <Page.BottomAppBar>
+        <CommandBar x:Name="CommandBar">
+            <AppBarButton Label="Layers">
+                <AppBarButton.Icon>
+                    <FontIcon Glyph="&#xE81E;" FontFamily="Segoe MDL2 Assets"/>
+                </AppBarButton.Icon>
+                <AppBarButton.Flyout>
+                    <MenuFlyout x:Name="LayersMenuFlyout">
+                        <ToggleMenuFlyoutItem Text="Bike" Tag="Bike" Click="MenuFlyoutItem_OnClick"/>
+                        <ToggleMenuFlyoutItem Text="Cycle Superhighways" Tag="CycleSuper" Click="MenuFlyoutItem_OnClick"/>
+                        <MenuFlyoutSeparator />
+                        <ToggleMenuFlyoutItem Text="Bus" Tag="Bus" Click="MenuFlyoutItem_OnClick" IsEnabled="False"/>
+                        <ToggleMenuFlyoutItem Text="Tube &amp; Overground" Tag="Tube" Click="MenuFlyoutItem_OnClick" IsEnabled="False"/>
+                        <ToggleMenuFlyoutItem Text="Oyster" Tag="Oyster" Click="MenuFlyoutItem_OnClick" IsEnabled="False"/>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <AppBarButton Label="Find Me" Icon="Map" Click="FindYou_OnClick"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <RelativePanel x:Name="MapRelativePanel">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualState x:Name="Narrow">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="LayersMenuFlyout.Placement" Value="Full" />
+                        <Setter Target="CommandBar.IsSticky" Value="False"/>
+                        <Setter Target="CommandBar.IsOpen" Value="False"/>
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="Wide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="641" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="LayersMenuFlyout.Placement" Value="Bottom" />
+                        <Setter Target="CommandBar.IsSticky" Value="True"/>
+                        <Setter Target="CommandBar.IsOpen" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <maps:MapControl  
+            x:Name="MapControl" 
+            RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" 
+            RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True"
+            MapElementClick="MapControl_OnMapElementClick" />
+    </RelativePanel>
+</Page>
