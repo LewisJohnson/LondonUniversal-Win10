@@ -11,7 +11,7 @@
     <Page.Resources>
         <views:ScenarioBindingConverter x:Key="ScenarioConverter"/>
     </Page.Resources>
-
+    
     <Grid x:Name="Grid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>

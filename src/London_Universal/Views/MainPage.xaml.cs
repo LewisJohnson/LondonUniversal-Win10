@@ -14,11 +14,19 @@ namespace London_Universal.Views
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        #region Properties
+
         public static bool ShowBusPins;
         public static bool ShowBikePins;
         public static bool ShowOysterPins;
         public static bool ShowTubePins;
         public static bool ShowSuperHighways;
+
+        public static ObservableCollection<BikePointRootObject> BikePointCollection
+        { get; private set; } = new ObservableCollection<BikePointRootObject>();
+
+        public static ObservableCollection<SuperCycleRootObject> SuperCycleCollection
+        { get; private set; } = new ObservableCollection<SuperCycleRootObject>();
 
         private readonly List<Scenario> _scenarios = new List<Scenario>
         {
@@ -26,25 +34,21 @@ namespace London_Universal.Views
             new Scenario {Title = "Settings", ClassType = typeof (Settings)}
         };
 
+        #endregion
+
         public MainPage()
         {
             InitializeComponent();
         }
 
-        public static ObservableCollection<BikePointRootObject> BikePointCollection { get; private set; } =
-            new ObservableCollection<BikePointRootObject>();
+        #region Click Events
 
-        public static ObservableCollection<SuperCycleRootObject> SuperCycleCollection { get; private set; } =
-            new ObservableCollection<SuperCycleRootObject>();
+        private void Hamburger_Click(object sender, RoutedEventArgs e) => Splitter.IsPaneOpen = (Splitter.IsPaneOpen != true);
 
-        private void Hamburger_Click(object sender, RoutedEventArgs e)
-        {
-            Splitter.IsPaneOpen = (Splitter.IsPaneOpen != true);
-        }
 
         private async void Footer_Click(object sender, RoutedEventArgs e)
         {
-            await Launcher.LaunchUriAsync(new Uri(((HyperlinkButton) sender).Tag.ToString()));
+            await Launcher.LaunchUriAsync(new Uri(((HyperlinkButton)sender).Tag.ToString()));
         }
 
         private void ScenarioControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -58,6 +62,8 @@ namespace London_Universal.Views
             }
         }
 
+        #endregion
+
         private async void MainPage_OnLoading(FrameworkElement sender, object args)
         {
             ScenarioControl.ItemsSource = _scenarios;
@@ -67,6 +73,8 @@ namespace London_Universal.Views
             SuperCycleCollection = await DataFetch.SuperHighwaysTask();
         }
     }
+
+    #region Scenario
 
     public class Scenario
     {
@@ -87,4 +95,6 @@ namespace London_Universal.Views
             return true;
         }
     }
+
+    #endregion
 }

@@ -10,10 +10,9 @@ namespace London_Universal.DataModels
     public class SuperCycleGeography
     {
 
-        [JsonProperty("type")]
+
         public string Type { get; set; }
 
-        [JsonProperty("coordinates")]
         public object[][] Coordinates { get; set; }
     }
 
@@ -21,20 +20,21 @@ namespace London_Universal.DataModels
     public class SuperCycleRootObject
     {
 
-        [JsonProperty("$id")]
         public string Id { get; set; }
 
-        [JsonProperty("$type")]
-        public string Type { get; set; }
-
-        [JsonProperty("label")]
         public string Label { get; set; }
 
-        [JsonProperty("geography")]
         public SuperCycleGeography Geography { get; set; }
 
-        [JsonProperty("segmented")]
         public bool Segmented { get; set; }
 
     }
+
+    public enum SuperCyleHighwayType
+    {
+        LineString,
+        MultiLineString
+    }
+
+        
 }
