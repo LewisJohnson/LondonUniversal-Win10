@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:maps="using:Windows.UI.Xaml.Controls.Maps"
-    mc:Ignorable="d" 
+    mc:Ignorable="d"
     Loading="MapPage_Loading" Loaded="MapPage_OnLoaded" SizeChanged="FullMap_OnSizeChanged">
 
     <Page.BottomAppBar>
@@ -39,18 +39,20 @@
                         <Setter Target="LayersMenuFlyout.Placement" Value="Full" />
                         <Setter Target="CommandBar.IsSticky" Value="False"/>
                         <Setter Target="CommandBar.IsOpen" Value="False"/>
+                        <Setter Target="Splitter.DisplayMode" Value="Overlay"/>
 
                         <Setter Target="SearchCombo.(RelativePanel.AlignRightWithPanel)" Value="True"/>
                         <Setter Target="SearchCombo.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
                         <Setter Target="SearchCombo.HorizontalAlignment" Value="Stretch"/>
-                        <Setter Target="SearchCombo.Margin" Value="10,0"/>
+                        <Setter Target="SearchCombo.Margin" Value="20,10,40,10"/>
+                        <Setter Target="SearchCombo.(RelativePanel.LeftOf)" Value=""/>
 
-                        <Setter Target="SearchBox.Margin" Value="10,0"/>
+                        <Setter Target="SearchBox.Margin" Value="20,0"/>
                         <Setter Target="SearchBox.HorizontalAlignment" Value="Stretch"/>
                         <Setter Target="SearchBox.(RelativePanel.AlignRightWithPanel)" Value="True"/>
                         <Setter Target="SearchBox.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
                         <Setter Target="SearchBox.(RelativePanel.Below)" Value="SearchCombo"/>
-                        <Setter Target="SearchBox.(RelativePanel.RightOf)" Value=""/>
+                        <Setter Target="SearchBox.Width" Value="Auto"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -62,18 +64,22 @@
                         <Setter Target="LayersMenuFlyout.Placement" Value="Bottom" />
                         <Setter Target="CommandBar.IsSticky" Value="True"/>
                         <Setter Target="CommandBar.IsOpen" Value="True"/>
+                        <Setter Target="Splitter.DisplayMode" Value="Inline"/>
+                        
 
                         <Setter Target="SearchCombo.(RelativePanel.AlignRightWithPanel)" Value="False"/>
-                        <Setter Target="SearchCombo.(RelativePanel.AlignLeftWithPanel)" Value="False"/>
+                        <Setter Target="SearchCombo.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
                         <Setter Target="SearchCombo.HorizontalAlignment" Value="Right"/>
-                        <Setter Target="SearchCombo.Margin" Value="10,0,0,0"/>
+                        <Setter Target="SearchCombo.Margin" Value="10,10,0,0"/>
+                        <Setter Target="SearchCombo.(RelativePanel.LeftOf)" Value="SearchBox"/>
 
-                        <Setter Target="SearchBox.Margin" Value="0,0,10,0"/>
+                        <Setter Target="SearchBox.Margin" Value="0,10,54,0"/>
                         <Setter Target="SearchBox.HorizontalAlignment" Value="Right"/>
-                        <Setter Target="SearchBox.(RelativePanel.AlignRightWithPanel)" Value="False"/>
+                        <Setter Target="SearchBox.(RelativePanel.AlignRightWithPanel)" Value="True"/>
                         <Setter Target="SearchBox.(RelativePanel.AlignLeftWithPanel)" Value="False"/>
                         <Setter Target="SearchBox.(RelativePanel.Below)" Value=""/>
-                        <Setter Target="SearchBox.(RelativePanel.RightOf)" Value="SearchCombo"/>
+                        <Setter Target="SearchBox.Width" Value="180"/>
+
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -84,11 +90,11 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <SplitView PanePlacement="Right" x:Name="Splitter" >
+        <SplitView PanePlacement="Right" x:Name="Splitter" Grid.Column="0" Grid.ColumnSpan="2" PaneClosing="SplitView_OnPaneClosing">
             <SplitView.Pane>
-                <RelativePanel Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}">
+                <RelativePanel Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}" >
 
-                    <ComboBox x:Name="SearchCombo" SelectedIndex="0" SelectionChanged="Selector_OnSelectionChanged">
+                    <ComboBox x:Name="SearchCombo" SelectedIndex="0" SelectionChanged="Selector_OnSelectionChanged" >
                         <ComboBoxItem Content="Bike"/>
                         <ComboBoxItem Content="Superhighways"/>
                         <ComboBoxItem Content="Tube" IsEnabled="False"/>
@@ -96,11 +102,11 @@
                         <ComboBoxItem Content="Bus" IsEnabled="False"/>
                     </ComboBox>
 
-                    <SearchBox x:Name="SearchBox" ChooseSuggestionOnEnter="True" FocusOnKeyboardInput="True" PlaceholderText="Search by name" QuerySubmitted="SearchBox_QuerySubmitted" GotFocus="Search_OnGotFocus"/>
+                    <SearchBox x:Name="SearchBox" ChooseSuggestionOnEnter="True" FocusOnKeyboardInput="True"  PlaceholderText="Search by name" QuerySubmitted="SearchBox_QuerySubmitted" GotFocus="Search_OnGotFocus" />
 
                     <MenuFlyoutSeparator x:Name="AppBarSeparator"  RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="SearchBox"/>
-
-                    <ScrollViewer RelativePanel.AlignBottomWithPanel="True" RelativePanel.Below="AppBarSeparator" Margin="10,5,10,50" ZoomMode="Disabled" >
+                    
+                    <ScrollViewer RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWithPanel="True" RelativePanel.Below="AppBarSeparator" Margin="10,5,10,50" ZoomMode="Disabled" >
                         <ListView x:Name="SearchListView" HorizontalAlignment="Stretch" ItemClick="SearchList_OnSelectionChanged" IsItemClickEnabled="True"/>
                     </ScrollViewer>
                 </RelativePanel>
@@ -114,10 +120,10 @@
             </RelativePanel>
         </SplitView>
 
-        <Border Grid.Column="1" Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}" Tapped="Search_OnClick">
-            <ToggleButton Style="{StaticResource SymbolButton}" VerticalAlignment="Top" Foreground="{ThemeResource ApplicationForegroundThemeBrush}">
+        <Border x:Name="SearchBorder" Grid.Column="1" Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}" Height="54" VerticalAlignment="Top">
+            <ToggleButton Style="{StaticResource SymbolButton}"  Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Tapped="Search_OnClick">
                 <ToggleButton.Content>
-                    <FontIcon x:Name="Search" FontFamily="Segoe MDL2 Assets" Glyph="&#xE094;" Margin="0,10,0,0"/>
+                    <FontIcon x:Name="SearchIcon" FontFamily="Segoe MDL2 Assets" Glyph="&#xE11A;" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </ToggleButton.Content>
             </ToggleButton>
         </Border>

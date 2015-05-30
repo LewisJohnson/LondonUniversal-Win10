@@ -1,0 +1,71 @@
+﻿<Page
+    x:Class="London_Universal.Views.About"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup>
+                    <VisualState>
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="0" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                        <Setter Target="PopUpScrollViewer.(RelativePanel.AlignRightWithPanel)" Value="True"/>
+                        </VisualState.Setters>
+                    </VisualState>
+
+                    <VisualState>
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="641" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                        <Setter Target="PopUpScrollViewer.(RelativePanel.AlignRightWithPanel)" Value="False"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+
+            <TextBlock x:Name="AboutTextBlock" Text="About." FontFamily="Segoe UI Semilight" FontSize="48" Margin="10,10"/>
+
+        <ScrollViewer MaxWidth="500" x:Name="PopUpScrollViewer" RelativePanel.Below="AboutTextBlock" Margin="10,0" HorizontalContentAlignment="Center" RelativePanel.AlignLeftWithPanel="True">
+            <StackPanel>
+                <TextBlock Text="{StaticResource AboutGettingAround-Header}" Style="{StaticResource AboutHeaderTextStyle}" />
+
+                <TextBlock Text="{StaticResource AboutAppBar-SubHeader}" Style="{StaticResource AboutSubHeaderTextStyle}"/>
+                <TextBlock Text="{StaticResource AboutAppBar-Body}" Style="{StaticResource AboutBaseTextStyle}" />
+
+                <TextBlock Text="{StaticResource AboutSearch-SubHeader}" Style="{StaticResource AboutSubHeaderTextStyle}"/>
+                <TextBlock Text="{StaticResource AboutSearch-Body}" Style="{StaticResource AboutBaseTextStyle}"  />
+
+                <TextBlock Text="{StaticResource AboutTabNavigaton-SubHeader}" Style="{StaticResource AboutSubHeaderTextStyle}" />
+                <TextBlock Text="{StaticResource AboutTabNavigaton-Body}" Style="{StaticResource AboutBaseTextStyle}"/>
+
+                <TextBlock Text="{StaticResource About3RdParty-Header}" Style="{StaticResource AboutHeaderTextStyle}" />
+
+                <TextBlock Text="{StaticResource AboutJson-SubHeader}" Style="{StaticResource AboutSubHeaderTextStyle}" />
+                <TextBlock Text="{StaticResource JsonNet-License}" Style="{StaticResource AboutLicenseNameStyle}" />
+                <TextBlock Text="{StaticResource JsonNet-LicenseBody}" Style="{StaticResource AboutLicenseBodyStyle}" />
+
+                <TextBlock Text="{StaticResource AboutSharpkKml-SubHeader}" Style="{StaticResource AboutSubHeaderTextStyle}" />
+                <TextBlock Text="{StaticResource MicrosoftPublicLicense-License}" Style="{StaticResource AboutLicenseNameStyle}" />
+                <TextBlock Text="{StaticResource MicrosoftPublicLicense-Body}" Style="{StaticResource AboutLicenseBodyStyle}" />
+
+
+                <TextBlock Text="{StaticResource TflThanks-SubHeader}" Style="{StaticResource AboutSubHeaderTextStyle}" />
+                <TextBlock Text="{StaticResource TflThanks-Body}" Style="{StaticResource AboutBaseTextStyle}" />
+
+                <TextBlock Text="{StaticResource Me-SubHeader}" Style="{StaticResource AboutSubHeaderTextStyle}" />
+                <TextBlock Text="{StaticResource Me-Body}" Style="{StaticResource AboutBaseTextStyle}" />
+
+                <TextBlock Text="{StaticResource OwnerString}" HorizontalAlignment="Center" Style="{StaticResource AboutLicenseBodyStyle}" />
+
+                <TextBlock Text="{StaticResource LoveLondon-Body}" Style="{StaticResource AboutLicenseBodyStyle}" HorizontalAlignment="Center"/>
+
+            </StackPanel>
+        </ScrollViewer>
+    </RelativePanel>
+</Page>

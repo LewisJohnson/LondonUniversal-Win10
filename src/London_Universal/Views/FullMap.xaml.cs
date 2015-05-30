@@ -250,13 +250,11 @@ namespace London_Universal.Views
 
         }
 
-
-
         #endregion
 
         #region InfoBox Funcs
 
-        private async void BikeInfoBoxOnTapped(object sender, TappedRoutedEventArgs e, BikePointRootObject item, double lat,double lon)
+        private async void BikeInfoBoxOnTapped(object sender, TappedRoutedEventArgs e, BikePointRootObject item, double lat, double lon)
         {
             var stack = sender as StackPanel;
             var directions = stack?.Children[0] as ToggleButton;
@@ -595,7 +593,24 @@ namespace London_Universal.Views
         #region SearchBox Funcs
 
         private void Search_OnClick(object sender, TappedRoutedEventArgs tappedRoutedEventArgs)
-            => Splitter.IsPaneOpen = (Splitter.IsPaneOpen != true);
+        {
+            Splitter.IsPaneOpen = (Splitter.IsPaneOpen != true);
+
+            SearchIcon.FontSize = 15;
+            SearchIcon.Glyph = "";
+
+            SearchBorder.Height = 50;
+        }
+
+        private void SplitView_OnPaneClosing(SplitView sender, SplitViewPaneClosingEventArgs args)
+        {
+            SearchIcon.FontSize = 30;
+            SearchIcon.Glyph = "";
+
+            SearchBorder.Height = 54;
+
+        }
+
 
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
             => SearchListView?.Items.Clear();
@@ -610,7 +625,6 @@ namespace London_Universal.Views
 
         private void SearchList_OnSelectionChanged(object sender, ItemClickEventArgs e)
         {
-
             var selectedCombo = SearchCombo.SelectedItem as ComboBoxItem;
 
             switch (selectedCombo?.Content.ToString())

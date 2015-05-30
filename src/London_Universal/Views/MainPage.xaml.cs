@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Windows.System;
+using Windows.UI;
+using Windows.UI.Popups;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -30,8 +33,19 @@ namespace London_Universal.Views
 
         private readonly List<Scenario> _scenarios = new List<Scenario>
         {
-            new Scenario {Title = "Map", ClassType = typeof (FullMap)},
-            new Scenario {Title = "Settings", ClassType = typeof (Settings)}
+            new Scenario
+            {
+                Title = "Map", ClassType = typeof (FullMap)
+            
+            },
+            new Scenario
+            {
+                Title = "Settings", ClassType = typeof (Settings)
+            },
+            new Scenario
+            {
+                Title = "About", ClassType = typeof (About)
+            }
         };
 
         #endregion
@@ -39,13 +53,12 @@ namespace London_Universal.Views
         public MainPage()
         {
             InitializeComponent();
+            
         }
 
         #region Click Events
 
         private void Hamburger_Click(object sender, RoutedEventArgs e) => Splitter.IsPaneOpen = (Splitter.IsPaneOpen != true);
-
-
         private async void Footer_Click(object sender, RoutedEventArgs e)
         {
             await Launcher.LaunchUriAsync(new Uri(((HyperlinkButton)sender).Tag.ToString()));
@@ -66,11 +79,37 @@ namespace London_Universal.Views
 
         private async void MainPage_OnLoading(FrameworkElement sender, object args)
         {
+
             ScenarioControl.ItemsSource = _scenarios;
-            ScenarioControl.SelectedIndex = 0;
 
             BikePointCollection = await DataFetch.BikePointsTask();
             SuperCycleCollection = await DataFetch.SuperHighwaysTask();
+        }
+
+        private void MainPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+            var value = roamingSettings.Values["NotFirstRun"];
+
+            if (value?.ToString() == "False")
+            {
+                ScenarioControl.SelectedIndex = 2;
+                roamingSettings.Values["NotFirstRun"] = true;
+                HolderFrame.Navigate(typeof(About));
+                Splitter.IsPaneOpen = false;
+            }
+            else if (value == null)
+            {
+                ScenarioControl.SelectedIndex = 2;
+                roamingSettings.Values["NotFirstRun"] = true;
+                HolderFrame.Navigate(typeof(About));
+                Splitter.IsPaneOpen = false;
+            }
+            else if (value.ToString() == "True")
+            {
+                ScenarioControl.SelectedIndex = 0;
+            }
+
         }
     }
 
@@ -98,3 +137,4 @@ namespace London_Universal.Views
 
     #endregion
 }
+ 
