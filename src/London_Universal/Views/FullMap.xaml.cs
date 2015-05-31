@@ -538,50 +538,37 @@ namespace London_Universal.Views
             var property0 = new TextBlock
             {
                 Text = "TerminalName: " + item.additionalProperties[0].value,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5),
-                Opacity = 0
+                Style = (Style) Application.Current.Resources["InfoBoxText"]
             };
             var property1 = new TextBlock
             {
                 Text = "Installed: " + item.additionalProperties[1].value,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5),
-                Opacity = 0
+                Style = (Style)Application.Current.Resources["InfoBoxText"]
             };
             var property2 = new TextBlock
             {
                 Text = "Locked: " + item.additionalProperties[2].value,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5),
-                Opacity = 0
+                Style = (Style)Application.Current.Resources["InfoBoxText"]
             };
             var property3 = new TextBlock
             {
                 Text = "InstallDate: " + item.additionalProperties[3].value,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5),
-                Opacity = 0
+                Style = (Style)Application.Current.Resources["InfoBoxText"]
             };
             var property4 = new TextBlock
             {
                 Text = "RemovalDate: " + item.additionalProperties[4].value,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5)
+                Style = (Style)Application.Current.Resources["InfoBoxText"]
             };
             var property5 = new TextBlock
             {
                 Text = "Temporary: " + item.additionalProperties[5].value,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5),
-                Opacity = 0
+                Style = (Style)Application.Current.Resources["InfoBoxText"]
             };
             var property8 = new TextBlock
             {
                 Text = "NbDocks: " + item.additionalProperties[8].value,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5),
-                Opacity = 0
+                Style = (Style)Application.Current.Resources["InfoBoxText"]
             };
 
             l.Children.Add(property8);
@@ -607,38 +594,30 @@ namespace London_Universal.Views
             var name = new TextBlock
             {
                 Text = "Name: " + item.tradingName,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5)
+                Style = (Style)Application.Current.Resources["InfoBoxText"]
             };
             var address = new TextBlock
             {
-                Text = "Address: " + item.addressLine1,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5),
-                TextWrapping = TextWrapping.Wrap
+                Text = "Address: " + item.postcode + " " + item.addressLine1,
+                Style = (Style)Application.Current.Resources["InfoBoxText"]
             };
 
             var address2 = new TextBlock
             {
                 Text =  item.addressLine2,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5),
-                TextWrapping = TextWrapping.Wrap
+                Style = (Style)Application.Current.Resources["InfoBoxText"]
             };
 
             var address3 = new TextBlock
             {
                 Text =  item.addressLine2,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5),
-                TextWrapping = TextWrapping.Wrap
+                Style = (Style)Application.Current.Resources["InfoBoxText"]
             };
 
             var emptyDocks = new TextBlock
             {
                 Text = "Number: " + item.bookingsPhoneNumber,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5)
+                Style = (Style)Application.Current.Resources["InfoBoxText"]
             };
 
             var expand = new ToggleButton
@@ -708,47 +687,43 @@ namespace London_Universal.Views
         }
         private static void CabWiseExtendedInfoBox(CabWiseOperatorList item, StackPanel l)
         {
-            var email = new TextBlock
-            {
-                Text = "Email: " + item.bookingsEmail,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5),
-            };
+
             var monThu = new TextBlock
             {
-                Text = "Mon-Thu: " + item.startTimeMonThu + item.endTimeMonThu,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5),
+                Text = "Mon-Thu: " + item.startTimeMonThu + "-" + item.endTimeMonThu,
+                Style = (Style) Application.Current.Resources["InfoBoxText"]
             };
             var fri = new TextBlock
             {
-                Text = "Fri: " + item.startTimeFri + item.endTimeFri,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5),
+                Text = "Fri: " + item.startTimeFri + "-" + item.endTimeFri,
+                Style = (Style) Application.Current.Resources["InfoBoxText"]
             };
             var sat = new TextBlock
             {
-                Text = "Sat: " + item.startTimeSat + item.endTimeSat,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5),
+                Text = "Sat: " + item.startTimeSat + "-" + item.endTimeSat,
+                Style = (Style) Application.Current.Resources["InfoBoxText"]
             };
             var sun = new TextBlock
             {
-                Text = "Sun: " + item.startTimeSun + item.endTimeSun,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5)
+                Text = "Sun: " + item.startTimeSun + "-" +  item.endTimeSun,
+                Style = (Style) Application.Current.Resources["InfoBoxText"]
             };
 
-
-            l.Children.Add(email);
+            if (item.bookingsEmail != string.Empty)
+            {
+                l.Children.Add(new TextBlock
+                {
+                    Text = "Email: " + item.bookingsEmail,
+                    Style = (Style)Application.Current.Resources["InfoBoxText"]
+                });
+            }
 
             if (item.hoursOfOperation24X7)
             {
                 l.Children.Add(new TextBlock
                 {
                     Text = "Open 24/7 ",
-                    Foreground = new SolidColorBrush(Colors.White),
-                    Margin = new Thickness(5)
+                    Style = (Style) Application.Current.Resources["InfoBoxText"]
                 }
                     );
             }
@@ -764,9 +739,8 @@ namespace London_Universal.Views
             {
                 l.Children.Add(new TextBlock
                 {
-                    Text = "Accepts Cards",
-                    Foreground = new SolidColorBrush(Colors.White),
-                    Margin = new Thickness(5)
+                    Text = "Accepts cards",
+                    Style = (Style) Application.Current.Resources["InfoBoxText"]
                 }
                     );
             }
@@ -774,9 +748,8 @@ namespace London_Universal.Views
             {
                 l.Children.Add(new TextBlock
                 {
-                    Text = "Does not Cards",
-                    Foreground = new SolidColorBrush(Colors.White),
-                    Margin = new Thickness(5)
+                    Text = "Does not accept cards",
+                    Style = (Style) Application.Current.Resources["InfoBoxText"]
                 }
                     );
             }
@@ -785,9 +758,8 @@ namespace London_Universal.Views
             {
                 l.Children.Add(new TextBlock
                 {
-                    Text = "Wheelchair Accessible",
-                    Foreground = new SolidColorBrush(Colors.White),
-                    Margin = new Thickness(5)
+                    Text = "Wheelchair accessible",
+                    Style = (Style) Application.Current.Resources["InfoBoxText"]
                 }
                     );
             }
@@ -795,9 +767,8 @@ namespace London_Universal.Views
             {
                 l.Children.Add(new TextBlock
                 {
-                    Text = "Not Wheelchair Accessible",
-                    Foreground = new SolidColorBrush(Colors.White),
-                    Margin = new Thickness(5)
+                    Text = "Not Wheelchair accessible",
+                    Style = (Style) Application.Current.Resources["InfoBoxText"]
                 }
                     );
             }
@@ -806,11 +777,10 @@ namespace London_Universal.Views
             {
                 l.Children.Add(new TextBlock
                 {
-                    Text = "Has Waiting Room",
-                    Foreground = new SolidColorBrush(Colors.White),
-                    Margin = new Thickness(5)
+                    Text = "Has waiting room",
+                    Style = (Style) Application.Current.Resources["InfoBoxText"]
                 }
-                    );
+                );
             }
         }
 

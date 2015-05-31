@@ -89,12 +89,11 @@ namespace London_Universal.Views
 
         private async void MainPage_OnLoading(FrameworkElement sender, object args)
         {
-
             ScenarioControl.ItemsSource = _scenarios;
 
             BikePointCollection = await DataFetch.BikePointsTask();
-            SuperCycleCollection = await DataFetch.SuperHighwaysTask();
             CabWiseCollection = await DataFetch.CabWiseTask();
+            SuperCycleCollection = await DataFetch.SuperHighwaysTask();
 
             var internetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
 
