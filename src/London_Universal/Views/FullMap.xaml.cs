@@ -40,11 +40,7 @@ namespace London_Universal.Views
         };
 
         private MapRouteView _directionsMapRoute;
-        private readonly ListViewItem _emptyListHint = new ListViewItem
-        {
-            Content = "Hint: You can search for all by just pressing the search icon",
-            IsTapEnabled = false
-        };
+        private readonly string _emptyListHint = "Hint: You can search for all by just pressing the search icon";
 
         #endregion
 

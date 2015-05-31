@@ -43,7 +43,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
             <StackPanel MaxWidth="500" x:Name="GettingAround" Margin="10,10">
             <TextBlock Text="{StaticResource AboutGettingAround-Header}"
                            Style="{StaticResource AboutHeaderTextStyle}" />

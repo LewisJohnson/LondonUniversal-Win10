@@ -23,9 +23,9 @@
             return string.Format(baseS, AppId, AppKey);
         }
 
-        public static string StationSpots()
+        public static string Lines()
         {
-            const string baseS = "http://data.tfl.gov.uk/tfl/syndication/feeds/stations.kml?app_id={0}&app_key={1}";
+            const string baseS = "https://api.tfl.gov.uk/Line?app_id={0}&app_key={1}";
             return string.Format(baseS, AppId, AppKey);
         }
 

@@ -35,7 +35,6 @@ namespace London_Universal.DataModels
 
         }
 
-
         public static async Task<string> OysterTask()
         {
             var request = new HttpRequestMessage(HttpMethod.Get, DataSoureUrLs.OysterSpots());
@@ -45,11 +44,10 @@ namespace London_Universal.DataModels
 
         public static async Task<string> StationsTask()
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, DataSoureUrLs.StationSpots());
+            var request = new HttpRequestMessage(HttpMethod.Get, DataSoureUrLs.Lines());
             var response = await new HttpClient().SendAsync(request);
             return await response.Content.ReadAsStringAsync();
         }
-
 
     }
 
