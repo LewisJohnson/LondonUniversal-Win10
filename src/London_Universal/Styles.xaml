@@ -3,6 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:London_Universal">
 
+    <SolidColorBrush x:Key="TransDodgerBlue">
+        <SolidColorBrush.Color>#991E90FF</SolidColorBrush.Color>
+    </SolidColorBrush>
+
     <Style x:Key="SymbolButton" TargetType="ToggleButton">
         <Setter Property="Background" Value="{ThemeResource ToggleButtonBackgroundThemeBrush}"/>
         <Setter Property="Foreground" Value="{ThemeResource ToggleButtonForegroundThemeBrush}"/>
@@ -115,15 +119,31 @@
         <Setter Property="Margin" Value="0,0,0,5"/>
         <Setter Property="FontFamily" Value="Segoe UI Light"/>
         <Setter Property="FontSize" Value="30"/>
+        <Setter Property="Foreground" Value="DodgerBlue"/>
     </Style>
 
     <Style x:Key="AboutSubHeaderTextStyle" TargetType="TextBlock" >
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="Margin" Value="5,0,0,2"/>
         <Setter Property="FontFamily" Value="Segoe UI Light"/>
-        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontSize" Value="18"/>
     </Style>
 
+    <Style x:Key="GettingAroundSubHeaderTextStyle" TargetType="TextBlock" >
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Margin" Value="2,0,0,2"/>
+        <Setter Property="FontFamily" Value="Segoe UI Light"/>
+        <Setter Property="FontSize" Value="22"/>
+    </Style>
+
+    <Style x:Key="AboutMapSubHeadingTextStyle" TargetType="TextBlock" >
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Margin" Value="5,0,0,2"/>
+        <Setter Property="FontFamily" Value="Segoe UI Light"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Foreground" Value="Gray"></Setter>
+    </Style>
+    
     <Style x:Key="AboutBaseTextStyle" TargetType="TextBlock" >
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="Margin" Value="7,0,0,10"/>
@@ -145,7 +165,7 @@
         <Setter Property="Margin" Value="7,0,0,10"/>
         <Setter Property="FontFamily" Value="Segoe UI Light"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
-        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="FontSize" Value="12"/>
     </Style>
 
     <x:String x:Key="TflThanks-SubHeader">Transport For London (TFL)</x:String>
@@ -156,19 +176,23 @@
 
     <x:String x:Key="LoveLondon-Body">Created with ♥ in London</x:String>
 
+    <x:String x:Key="AboutMapPins-SubHeader">Map Pins</x:String>
+    <x:String x:Key="AboutMapPins-Body">Map Pins are the little icons on the map. Tapping these icons will open a panel which shows you informaion about the tapped icon. The panel will contain infomartion like Opening times, Bikes available to hire and more!
+    </x:String>
+    
     <x:String x:Key="AboutAppBar-SubHeader">App Bar</x:String>
     <x:String x:Key="AboutAppBar-Body">
-        The App Bar is found at the bottom, 
-        this is where you can control the maps layers and pinpoint your location, 
-        other map settings are found in the Settings tab.
+        The App Bar is found at the bottom of the map. The App Bar holds primary controls for the map, including map layers (Such as Bikepoints and CabWise) and pinpoint your location, other map settings (Like Landmarks) are found in the Settings tab.
     </x:String>
 
     <x:String x:Key="AboutSearch-SubHeader">Search</x:String>
     <x:String x:Key="AboutSearch-Body">
-        Search is available while you are using the Map. 
-        It is found on the upper right of the screen. 
-        With the search bar you can search for anything on the map, such as a Bus stop or Bike point.
+        Search is found on the upper right of the map. 
+        With search you can look through all of the locations on the map, such as a Bus stop or Bike point.
     </x:String>
+    
+    <x:String x:Key="AboutMaps-SubHeader">Maps</x:String>
+    <x:String x:Key="AboutApp-SubHeader">App</x:String>
 
     <x:String x:Key="OwnerString">© Lewis Johnson. All rights reserved.</x:String>
 
@@ -215,12 +239,14 @@
         <Setter Property="FontFamily" Value="Segoe UI Semilight"/>
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="Margin" Value="10,0,0,0"/>
-        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Foreground" Value="White"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
+
     </Style>
 
     <Style x:Key="CopyrightTextStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
         <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Foreground" Value="White"/>
     </Style>
 
     <Style x:Key="ScenarioHeaderTextStyle" TargetType="TextBlock">
@@ -247,10 +273,9 @@
 
     <Style x:Key="HyperlinkStyle" TargetType="HyperlinkButton">
         <Setter Property="Padding" Value="1"/>
-        <Setter Property="Foreground" Value="Gray"/>
+        <Setter Property="Foreground" Value="White"/>
     </Style>
 
-    <!-- Default style for Windows.UI.Xaml.Controls.ListBoxItem -->
     <Style x:Key="ListBoxItemStyle" TargetType="ListBoxItem">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="TabNavigation" Value="Local" />
@@ -416,7 +441,7 @@
 
 
     <Style x:Key="ScenarioListBoxStyle" TargetType="ListBox">
-        <Setter Property="Foreground" Value="{ThemeResource ListBoxForegroundThemeBrush}"/>
+        <Setter Property="Foreground" Value="White"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="{ThemeResource ListBoxBorderThemeThickness}"/>
@@ -436,21 +461,23 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <VirtualizingStackPanel Background="Transparent"/>
+                    <VirtualizingStackPanel Background="Transparent" />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListBox">
-                    <Border x:Name="LayoutRoot" BorderBrush="Transparent" BorderThickness="{TemplateBinding BorderThickness}" Background="Transparent">
+                    <Border x:Name="LayoutRoot" BorderBrush="Transparent"
+                            BorderThickness="{TemplateBinding BorderThickness}" Background="Transparent">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="Normal" />
                                 <VisualState x:Name="Disabled">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="LayoutRoot">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                       Storyboard.TargetName="LayoutRoot">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -458,16 +485,28 @@
                             <VisualStateGroup x:Name="FocusStates">
                                 <VisualState x:Name="Focused">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="LayoutRoot">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                       Storyboard.TargetName="LayoutRoot">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
-                                <VisualState x:Name="Unfocused"/>
+                                <VisualState x:Name="Unfocused" />
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <ScrollViewer x:Name="ScrollViewer" AutomationProperties.AccessibilityView="Raw" BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}" HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}" IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}" IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}" Padding="{TemplateBinding Padding}" TabNavigation="{TemplateBinding TabNavigation}" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
-                            <ItemsPresenter/>
+                        <ScrollViewer x:Name="ScrollViewer" AutomationProperties.AccessibilityView="Raw"
+                                      BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}"
+                                      HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}"
+                                      HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                      IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}"
+                                      IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}"
+                                      IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}"
+                                      Padding="{TemplateBinding Padding}"
+                                      TabNavigation="{TemplateBinding TabNavigation}"
+                                      VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                                      VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}"
+                                      ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
+                            <ItemsPresenter />
                         </ScrollViewer>
                     </Border>
                 </ControlTemplate>

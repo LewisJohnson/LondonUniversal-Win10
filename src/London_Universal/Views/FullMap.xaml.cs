@@ -41,7 +41,12 @@ namespace London_Universal.Views
             CollisionBehaviorDesired = MapElementCollisionBehavior.RemainVisible
         };
 
-        private MapRouteView _bikeMapRoute;
+        private MapRouteView _directionsMapRoute;
+        private readonly ListViewItem _emptyListHint = new ListViewItem
+        {
+            Content = "Hint: You can search for all by just pressing the search icon",
+            IsTapEnabled = false
+        };
 
         #endregion
 
@@ -59,40 +64,20 @@ namespace London_Universal.Views
 
         private async Task UsersLocation(bool movemap)
         {
-            var access = await Geolocator.RequestAccessAsync();
-
-            switch (access)
+            var geolocator = new Geolocator();
+            var geoposition = await geolocator.GetGeopositionAsync();
+            if (movemap)
             {
-                case GeolocationAccessStatus.Allowed:
-                    //Setting map to users location.
-
-                    var geolocator = new Geolocator();
-                    var geoposition = await geolocator.GetGeopositionAsync();
-                    if (movemap)
-                    {
-                        MapControl.ZoomLevel = 15;
-                        await MapControl.TrySetViewAsync(geoposition.Coordinate.Point);
-                    }
-                    _userLocationIcon.Location = new Geopoint(new BasicGeoposition
-                    {
-                        Latitude = geoposition.Coordinate.Point.Position.Latitude,
-                        Longitude = geoposition.Coordinate.Point.Position.Longitude
-                    });
-
-                    MapControl.MapElements.Add(_userLocationIcon);
-
-                    break;
-
-                case GeolocationAccessStatus.Denied:
-                    //No access to location. Setting it to around london.
-                    var nolocationDialog = new MessageDialog(
-                        "Sorry. This app relies on your location to function. Please allow you to access it via your settings",
-                        "We don't have access to your location :(");
-                    nolocationDialog.Commands.Add(new UICommand("Okay", command => Application.Current.Exit()));
-                    nolocationDialog.Options = MessageDialogOptions.AcceptUserInputAfterDelay;
-                    await nolocationDialog.ShowAsync();
-                    break;
+                MapControl.ZoomLevel = 17;
+                await MapControl.TrySetViewAsync(geoposition.Coordinate.Point);
             }
+            _userLocationIcon.Location = new Geopoint(new BasicGeoposition
+            {
+                Latitude = geoposition.Coordinate.Point.Position.Latitude,
+                Longitude = geoposition.Coordinate.Point.Position.Longitude
+            });
+
+            MapControl.MapElements.Add(_userLocationIcon);
         }
 
         private async void UpdateMapView()
@@ -222,6 +207,8 @@ namespace London_Universal.Views
             MapControl.LandmarksVisible = LandMarks;
             MapControl.Style = MapStyle;
             MapControl.ColorScheme = MapColorScheme;
+
+            SearchListView.Items.Add(_emptyListHint);
         }
 
         #endregion
@@ -274,7 +261,7 @@ namespace London_Universal.Views
                 case "CabWise":
                     foreach (var item in MainPage.CabWiseCollection.operators.operatorList.Where(item => element != null && item.latitude == element.Location.Position.Latitude))
                     {
-                        await CabWiseInfoBox(item, element);
+                        CabWiseInfoBox(item, element);
                     }
                     break;
             }
@@ -288,8 +275,8 @@ namespace London_Universal.Views
         private async void BikeInfoBoxOnTapped(object sender, TappedRoutedEventArgs e, BikePointRootObject item, double lat, double lon)
         {
             var stack = sender as StackPanel;
-            var directions = stack?.Children[0] as ToggleButton;
-            var expandInfoToggle = stack?.Children[4] as ToggleButton;
+            var directions = stack?.Children.First() as ToggleButton;
+            var expandInfoToggle = stack.Children.Last() as ToggleButton;
 
 
             switch (e.OriginalSource.ToString())
@@ -328,9 +315,61 @@ namespace London_Universal.Views
                         Storyboard.SetTargetProperty(opacityAnim, "Opacity");
                         sb2.Begin();
                         sb2.Completed += (o, o1) => MapControl.Children.Remove(stack);
-                        if (_bikeMapRoute != null)
+                        if (_directionsMapRoute != null)
                         {
-                            MapControl.Routes.Remove(_bikeMapRoute);
+                            MapControl.Routes.Remove(_directionsMapRoute);
+                        }
+                    }
+                    break;
+            }
+        }
+
+        private async void CabWiseBoxOnTapped(object sender, TappedRoutedEventArgs e, CabWiseOperatorList item, double lat, double lon)
+        {
+            var stack = sender as StackPanel;
+            var directions = stack?.Children.First() as ToggleButton;
+            var expandInfoToggle = stack?.Children.Last() as ToggleButton;
+
+
+            switch (e.OriginalSource.ToString())
+            {
+                case "Windows.UI.Xaml.Controls.Primitives.ToggleButton":
+                case "Windows.UI.Xaml.Controls.Grid":
+
+                    if (directions != null && directions.IsChecked == true)
+                    {
+                        await NewDirections(lat, lon);
+                    }
+                    if (expandInfoToggle != null && expandInfoToggle.IsChecked == true)
+                    {
+                        expandInfoToggle.Visibility = Visibility.Collapsed;
+                        expandInfoToggle.Height = 0;
+                        expandInfoToggle.IsChecked = false;
+                        CabWiseExtendedInfoBox(item, stack);
+                    }
+                    break;
+
+                case "Windows.UI.Xaml.Controls.StackPanel":
+                case "Windows.UI.Xaml.Controls.TextBlock":
+                    {
+                        var opacityAnim = new DoubleAnimation
+                        {
+                            Duration = new Duration(TimeSpan.FromSeconds(0.1)),
+                            To = 0,
+                            EasingFunction = new ExponentialEase()
+                        };
+                        var sb2 = new Storyboard
+                        {
+                            Duration = new Duration(TimeSpan.FromSeconds(0.1))
+                        };
+                        sb2.Children.Add(opacityAnim);
+                        Storyboard.SetTarget(opacityAnim, stack);
+                        Storyboard.SetTargetProperty(opacityAnim, "Opacity");
+                        sb2.Begin();
+                        sb2.Completed += (o, o1) => MapControl.Children.Remove(stack);
+                        if (_directionsMapRoute != null)
+                        {
+                            MapControl.Routes.Remove(_directionsMapRoute);
                         }
                     }
                     break;
@@ -364,12 +403,12 @@ namespace London_Universal.Views
 
             if (routeResult.Status == MapRouteFinderStatus.Success)
             {
-                if (_bikeMapRoute != null)
+                if (_directionsMapRoute != null)
                 {
-                    MapControl.Routes.Remove(_bikeMapRoute);
+                    MapControl.Routes.Remove(_directionsMapRoute);
                 }
                 // Use the route to initialize a MapRouteView.
-                _bikeMapRoute = new MapRouteView(routeResult.Route)
+                _directionsMapRoute = new MapRouteView(routeResult.Route)
                 {
                     RouteColor = Colors.DodgerBlue,
                     OutlineColor = Colors.AntiqueWhite
@@ -377,7 +416,7 @@ namespace London_Universal.Views
 
                 // Add the new MapRouteView to the Routes collection
                 // of the MapControl.
-                MapControl.Routes.Add(_bikeMapRoute);
+                MapControl.Routes.Add(_directionsMapRoute);
             }
             else
             {
@@ -386,6 +425,109 @@ namespace London_Universal.Views
             }
         }
 
+        private async Task BikeInfoBox(BikePointRootObject item, MapIcon bkeElement)
+        {
+            var infoBox = new StackPanel
+            {
+                Opacity = 0,
+                BorderBrush = new SolidColorBrush(Colors.WhiteSmoke),
+                BorderThickness = new Thickness(1)
+            };
+            var name = new TextBlock
+            {
+                Text = "Name: " + item.commonName,
+                Foreground = new SolidColorBrush(Colors.White),
+                Margin = new Thickness(5)
+            };
+            var hire = new TextBlock
+            {
+                Text = "Bikes: " + item.additionalProperties[6].value,
+                Foreground = new SolidColorBrush(Colors.White),
+                Margin = new Thickness(5)
+            };
+            var emptyDocks = new TextBlock
+            {
+                Text = "Empty Docks: " + item.additionalProperties[7].value,
+                Foreground = new SolidColorBrush(Colors.White),
+                Margin = new Thickness(5)
+            };
+
+            var expand = new ToggleButton
+            {
+                Content = "▼",
+                Foreground = new SolidColorBrush(Colors.White),
+                FontSize = 8,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch
+            };
+
+            var dirBtn = new ToggleButton
+            {
+                Content = "Directions",
+                Foreground = new SolidColorBrush(Colors.White),
+                FontSize = 10,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch
+            };
+
+            infoBox.Children.Add(dirBtn);
+            infoBox.Children.Add(name);
+            infoBox.Children.Add(hire);
+            infoBox.Children.Add(emptyDocks);
+            infoBox.Children.Add(expand);
+
+            infoBox.Background = new SolidColorBrush(Color.FromArgb(255, 116, 116, 116));
+            MapControl.SetLocation(infoBox, new Geopoint(new BasicGeoposition
+            {
+                Latitude = bkeElement.Location.Position.Latitude,
+                Longitude = bkeElement.Location.Position.Longitude
+            }));
+
+            MapControl.SetNormalizedAnchorPoint(infoBox, new Point(0, 0));
+            MapControl.Children.Add(infoBox);
+
+            var opacityAnim = new DoubleAnimation
+            {
+                Duration = new Duration(TimeSpan.FromSeconds(0.3)),
+                To = 0.85,
+                EasingFunction = new ExponentialEase()
+            };
+            var sb = new Storyboard
+            {
+                Duration = new Duration(TimeSpan.FromSeconds(0.3))
+            };
+
+            sb.Children.Add(opacityAnim);
+            Storyboard.SetTarget(opacityAnim, infoBox);
+            Storyboard.SetTargetProperty(opacityAnim, "Opacity");
+
+            sb.Begin();
+            infoBox.Tapped +=
+                (o, eventArgs) =>
+                    BikeInfoBoxOnTapped(o, eventArgs, item, bkeElement.Location.Position.Latitude,
+                        bkeElement.Location.Position.Longitude);
+            //Checks if bikepoint is installed
+            if (item.additionalProperties[1].value != "true")
+                await new MessageDialog("This bikepoint is not installed yet.", "Alert").ShowAsync();
+
+            //Checks if bikepoint is locked
+            if (item.additionalProperties[2].value != "false")
+                await new MessageDialog("This bikepoint is locked.", "Alert").ShowAsync();
+
+            //Checks if bikepoint is going to be removed
+            if (item.additionalProperties[4].value != "")
+                await
+                    new MessageDialog(
+                        $"This bikepoint is going to be removed on {item.additionalProperties[4].value}",
+                        "Woah.").ShowAsync();
+
+            //Checks if bikepoint is temporary
+            if (item.additionalProperties[5].value != "false")
+                await
+                    new MessageDialog(
+                        "This bikepoint is only temporary. Be sure to check the status before arriving.",
+                        "Woah.").ShowAsync();
+        }
         private static void BikeExtendedInfoBox(BikePointRootObject item, StackPanel l)
         {
             var property0 = new TextBlock
@@ -515,112 +657,7 @@ namespace London_Universal.Views
             sb.Begin();
         }
 
-        private async Task BikeInfoBox(BikePointRootObject item, MapIcon bkeElement)
-        {
-            var infoBox = new StackPanel
-            {
-                Opacity = 0,
-                BorderBrush = new SolidColorBrush(Colors.WhiteSmoke),
-                BorderThickness = new Thickness(1)
-            };
-            var name = new TextBlock
-            {
-                Text = "Name: " + item.commonName,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5)
-            };
-            var hire = new TextBlock
-            {
-                Text = "Bikes: " + item.additionalProperties[6].value,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5)
-            };
-            var emptyDocks = new TextBlock
-            {
-                Text = "Empty Docks: " + item.additionalProperties[7].value,
-                Foreground = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(5)
-            };
-
-            var expand = new ToggleButton
-            {
-                Content = "▼",
-                Foreground = new SolidColorBrush(Colors.White),
-                FontSize = 8,
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Stretch
-            };
-
-            var dirBtn = new ToggleButton
-            {
-                Content = "Directions",
-                Foreground = new SolidColorBrush(Colors.White),
-                FontSize = 10,
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Stretch
-            };
-
-            infoBox.Children.Add(dirBtn);
-            infoBox.Children.Add(name);
-            infoBox.Children.Add(hire);
-            infoBox.Children.Add(emptyDocks);
-            infoBox.Children.Add(expand);
-
-            infoBox.Background = new SolidColorBrush(Color.FromArgb(255, 116, 116, 116));
-            MapControl.SetLocation(infoBox, new Geopoint(new BasicGeoposition
-            {
-                Latitude = bkeElement.Location.Position.Latitude,
-                Longitude = bkeElement.Location.Position.Longitude
-            }));
-
-            MapControl.SetNormalizedAnchorPoint(infoBox, new Point(0, 0));
-            MapControl.Children.Add(infoBox);
-
-            var opacityAnim = new DoubleAnimation
-            {
-                Duration = new Duration(TimeSpan.FromSeconds(0.3)),
-                To = 0.85,
-                EasingFunction = new ExponentialEase()
-            };
-            var sb = new Storyboard
-            {
-                Duration = new Duration(TimeSpan.FromSeconds(0.3))
-            };
-
-            sb.Children.Add(opacityAnim);
-            Storyboard.SetTarget(opacityAnim, infoBox);
-            Storyboard.SetTargetProperty(opacityAnim, "Opacity");
-
-            sb.Begin();
-            infoBox.Tapped +=
-                (o, eventArgs) =>
-                    BikeInfoBoxOnTapped(o, eventArgs, item, bkeElement.Location.Position.Latitude,
-                        bkeElement.Location.Position.Longitude);
-            //Checks if bikepoint is installed
-            if (item.additionalProperties[1].value != "true")
-                await new MessageDialog("This bikepoint is not installed yet.", "Alert").ShowAsync();
-
-            //Checks if bikepoint is locked
-            if (item.additionalProperties[2].value != "false")
-                await new MessageDialog("This bikepoint is locked.", "Alert").ShowAsync();
-
-            //Checks if bikepoint is going to be removed
-            if (item.additionalProperties[4].value != "")
-                await
-                    new MessageDialog(
-                        $"This bikepoint is going to be removed on {item.additionalProperties[4].value}",
-                        "Woah.").ShowAsync();
-
-            //Checks if bikepoint is temporary
-            if (item.additionalProperties[5].value != "false")
-                await
-                    new MessageDialog(
-                        "This bikepoint is only temporary. Be sure to check the status before arriving.",
-                        "Woah.").ShowAsync();
-        }
-
-
-        private async Task CabWiseInfoBox(CabWiseOperatorList item, MapIcon cabElement)
+        private void CabWiseInfoBox(CabWiseOperatorList item, MapIcon cabElement)
         {
             var infoBox = new StackPanel
             {
@@ -636,17 +673,42 @@ namespace London_Universal.Views
             };
             var address = new TextBlock
             {
-                Text = "Address: " + item.addressLine1 + " " + item.addressLine2,
+                Text = "Address: " + item.addressLine1,
                 Foreground = new SolidColorBrush(Colors.White),
                 Margin = new Thickness(5),
                 TextWrapping = TextWrapping.Wrap
             };
-            
+
+            var address2 = new TextBlock
+            {
+                Text =  item.addressLine2,
+                Foreground = new SolidColorBrush(Colors.White),
+                Margin = new Thickness(5),
+                TextWrapping = TextWrapping.Wrap
+            };
+
+            var address3 = new TextBlock
+            {
+                Text =  item.addressLine2,
+                Foreground = new SolidColorBrush(Colors.White),
+                Margin = new Thickness(5),
+                TextWrapping = TextWrapping.Wrap
+            };
+
             var emptyDocks = new TextBlock
             {
                 Text = "Number: " + item.bookingsPhoneNumber,
                 Foreground = new SolidColorBrush(Colors.White),
                 Margin = new Thickness(5)
+            };
+
+            var expand = new ToggleButton
+            {
+                Content = "▼",
+                Foreground = new SolidColorBrush(Colors.White),
+                FontSize = 8,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch
             };
 
 
@@ -662,7 +724,17 @@ namespace London_Universal.Views
             infoBox.Children.Add(dirBtn);
             infoBox.Children.Add(name);
             infoBox.Children.Add(address);
+            if (item.addressLine2 != ",")
+            {
+                infoBox.Children.Add(address2);
+            }
+            if (item.addressLine3 != ",")
+            {
+                infoBox.Children.Add(address3);
+            }
+
             infoBox.Children.Add(emptyDocks);
+            infoBox.Children.Add(expand);
 
             infoBox.Background = new SolidColorBrush(Color.FromArgb(255, 116, 116, 116));
             MapControl.SetLocation(infoBox, new Geopoint(new BasicGeoposition
@@ -690,12 +762,120 @@ namespace London_Universal.Views
             Storyboard.SetTargetProperty(opacityAnim, "Opacity");
 
             sb.Begin();
-            dirBtn.Tapped +=
-                async delegate
+
+            infoBox.Tapped +=
+                (o, eventArgs) =>
+                    CabWiseBoxOnTapped(o, eventArgs, item, item.latitude,
+                        item.longitude);
+        }
+
+        private static void CabWiseExtendedInfoBox(CabWiseOperatorList item, StackPanel l)
+        {
+            var email = new TextBlock
+            {
+                Text = "Email: " + item.bookingsEmail,
+                Foreground = new SolidColorBrush(Colors.White),
+                Margin = new Thickness(5),
+            };
+            var monThu = new TextBlock
+            {
+                Text = "Mon-Thu: " + item.startTimeMonThu + item.endTimeMonThu,
+                Foreground = new SolidColorBrush(Colors.White),
+                Margin = new Thickness(5),
+            };
+            var fri = new TextBlock
+            {
+                Text = "Fri: " + item.startTimeFri + item.endTimeFri,
+                Foreground = new SolidColorBrush(Colors.White),
+                Margin = new Thickness(5),
+            };
+            var sat = new TextBlock
+            {
+                Text = "Sat: " + item.startTimeSat + item.endTimeSat,
+                Foreground = new SolidColorBrush(Colors.White),
+                Margin = new Thickness(5),
+            };
+            var sun = new TextBlock
+            {
+                Text = "Sun: " + item.startTimeSun + item.endTimeSun,
+                Foreground = new SolidColorBrush(Colors.White),
+                Margin = new Thickness(5)
+            };
+
+
+            l.Children.Add(email);
+
+
+            if (item.hoursOfOperation24X7)
+            {
+                l.Children.Add(new TextBlock
                 {
-                    await NewDirections(cabElement.Location.Position.Latitude, cabElement.Location.Position.Longitude);
-                };
-            infoBox.Tapped += (sender, args) => MapControl.Children.Remove(infoBox);
+                    Text = "Open 24/7 ",
+                    Foreground = new SolidColorBrush(Colors.White),
+                    Margin = new Thickness(5)
+                }
+                    );
+            }
+            else
+            {
+                l.Children.Add(monThu);
+                l.Children.Add(fri);
+                l.Children.Add(sat);
+                l.Children.Add(sun);
+            }
+
+            if (item.creditDebitCard)
+            {
+                l.Children.Add(new TextBlock
+                {
+                    Text = "Accepts Cards",
+                    Foreground = new SolidColorBrush(Colors.White),
+                    Margin = new Thickness(5)
+                }
+                    );
+            }
+            else
+            {
+                l.Children.Add(new TextBlock
+                {
+                    Text = "Does not Cards",
+                    Foreground = new SolidColorBrush(Colors.White),
+                    Margin = new Thickness(5)
+                }
+                    );
+            }
+
+            if (item.wheelchairAccessible)
+            {
+                l.Children.Add(new TextBlock
+                {
+                    Text = "Wheelchair Accessible",
+                    Foreground = new SolidColorBrush(Colors.White),
+                    Margin = new Thickness(5)
+                }
+                    );
+            }
+            else
+            {
+                l.Children.Add(new TextBlock
+                {
+                    Text = "Not Wheelchair Accessible",
+                    Foreground = new SolidColorBrush(Colors.White),
+                    Margin = new Thickness(5)
+                }
+                    );
+            }
+
+            if (item.publicWaitingRoom)
+            {
+                l.Children.Add(new TextBlock
+                {
+                    Text = "Has Waiting Room",
+                    Foreground = new SolidColorBrush(Colors.White),
+                    Margin = new Thickness(5)
+                }
+                    );
+            }
         }
 
         #endregion
@@ -706,9 +886,13 @@ namespace London_Universal.Views
         {
             Splitter.IsPaneOpen = (Splitter.IsPaneOpen != true);
 
-            SearchIcon.FontSize = 15;
+            SearchIcon.FontSize = 20;
             SearchIcon.Glyph = "";
+            SearchIcon.Foreground = new SolidColorBrush(Colors.Black);
 
+            SearchBorder.CornerRadius = new CornerRadius(0);
+            SearchBorder.Margin = new Thickness(0, 2, 0, 0);
+            SearchBorder.Background = new SolidColorBrush(Colors.Transparent);
             SearchBorder.Height = 50;
         }
 
@@ -716,14 +900,19 @@ namespace London_Universal.Views
         {
             SearchIcon.FontSize = 30;
             SearchIcon.Glyph = "";
+            SearchIcon.Foreground = new SolidColorBrush(Colors.White);
 
+            SearchBorder.CornerRadius = new CornerRadius(90);
+            SearchBorder.Margin = new Thickness(15);
+            SearchBorder.Background = (Brush)Application.Current.Resources["TransDodgerBlue"];
             SearchBorder.Height = 54;
-
         }
 
-
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
-            => SearchListView?.Items.Clear();
+        {
+            SearchListView?.Items.Clear();
+            SearchListView?.Items.Add(_emptyListHint);
+        }
 
         private void Search_OnGotFocus(object sender, RoutedEventArgs routedEventArgs)
         {
@@ -746,6 +935,10 @@ namespace London_Universal.Views
                 case "Superhighways":
                     SuperHighwaySearch(e.ClickedItem.ToString(), true);
                     break;
+
+                case "CabWise":
+                    CabWiseSearch(e.ClickedItem.ToString(), true);
+                    break;
             }
         }
 
@@ -762,6 +955,10 @@ namespace London_Universal.Views
 
                 case "Superhighways":
                     SuperHighwaySearch(SearchBox.QueryText, false);
+                    break;
+
+                case "CabWise":
+                    CabWiseSearch(SearchBox.QueryText, false);
                     break;
             }
 
@@ -856,6 +1053,41 @@ namespace London_Universal.Views
 
 
 
+            }
+
+        }
+
+        private async void CabWiseSearch(string query, bool moveTo)
+        {
+            //CommandBar Layers Flyout Item (CABWISE)
+            var layerbikebtn = LayersMenuFlyout.Items[2] as ToggleMenuFlyoutItem;
+            if (MainPage.ShowCabWise == false)
+            {
+                MainPage.ShowCabWise = true;
+            }
+
+            if (layerbikebtn?.IsChecked == false)
+            {
+                layerbikebtn.IsChecked = true;
+            }
+
+            foreach (
+                var item in
+                    MainPage.CabWiseCollection.operators.operatorList.Where(
+                        item => item.tradingName.ToLower().Contains(query.ToLower())))
+            {
+                if (moveTo)
+                {
+                    await MapControl.TrySetViewAsync(new Geopoint(new BasicGeoposition
+                    {
+                        Latitude = item.latitude,
+                        Longitude = item.longitude
+                    }));
+                }
+                else
+                {
+                    SearchListView.Items.Add(item.tradingName);
+                }
             }
 
         }

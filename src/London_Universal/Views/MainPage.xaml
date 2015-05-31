@@ -20,14 +20,11 @@
         </Grid.ColumnDefinitions>
         <SplitView  Grid.Column="1" x:Name="Splitter" DisplayMode="Overlay">
             <SplitView.Pane>
-                <RelativePanel Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}">
-                    <StackPanel x:Name="HeaderPanel" Orientation="Horizontal">
-                        <TextBlock x:Name="Header" Text="London Universal" Style="{StaticResource TagLineTextStyle}" Margin="0,15,0,0" />
-                    </StackPanel>
+                <RelativePanel Background="#0081FF">
                    
                     <ListBox x:Name="ScenarioControl" SelectionChanged="ScenarioControl_SelectionChanged"
                  SelectionMode="Single" HorizontalAlignment="Left" Style="{StaticResource ScenarioListBoxStyle}"
-                 VerticalAlignment="Top" RelativePanel.Below="HeaderPanel" Margin="0,10,0,0" RelativePanel.Above="FooterPanel" Foreground="Black">
+                 VerticalAlignment="Top" Margin="0,10,0,0" RelativePanel.Above="FooterPanel" RelativePanel.AlignTopWithPanel="True">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Converter={StaticResource ScenarioConverter}}" Style="{StaticResource ListItemTextStyle}"/>
@@ -39,7 +36,7 @@
                         <TextBlock x:Name="Copyright" Text="&#xA9; Lewis Johnson. All rights reserved." Style="{StaticResource CopyrightTextStyle}"
                                    RelativePanel.Above="LinksPanel" Margin="10,10,0,0"
                                    TextWrapping="Wrap"/>
-                        <StackPanel x:Name="LinksPanel" Orientation="Horizontal" Margin="10,10,0,10">
+                        <StackPanel x:Name="LinksPanel" Orientation="Horizontal" Margin="15,10,0,10">
                             <HyperlinkButton x:Name="PrivacyLink" Content="Privacy" Tag="http://lewisj489.github.io/Cycle-London-Universal/privacy" Click="Footer_Click" FontSize="12" Style="{StaticResource HyperlinkStyle}"/>
                         </StackPanel>
                     </StackPanel>
@@ -50,10 +47,10 @@
             </RelativePanel>
         </SplitView>
 
-        <Border Grid.Column="0" Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}" Tapped="Hamburger_Click">
+        <Border Grid.Column="0" Background="DodgerBlue" Tapped="Hamburger_Click">
             <ToggleButton Style="{StaticResource SymbolButton}" VerticalAlignment="Top" Foreground="{ThemeResource ApplicationForegroundThemeBrush}">
                 <ToggleButton.Content>
-                    <FontIcon x:Name="Hamburger" FontFamily="Segoe MDL2 Assets" Glyph="&#xE700;" Margin="0,10,0,0"/>
+                    <FontIcon Foreground="White" x:Name="Hamburger" FontFamily="Segoe MDL2 Assets" Glyph="&#xE700;" Margin="0,10,0,0"/>
                 </ToggleButton.Content>
             </ToggleButton>
         </Border>

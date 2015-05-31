@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Windows.Devices.Geolocation;
+using Windows.Networking.Connectivity;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Popups;
@@ -26,14 +28,17 @@ namespace London_Universal.Views
         public static bool ShowSuperHighways;
         public static bool ShowCabWise;
 
-        public static ObservableCollection<BikePointRootObject> BikePointCollection { get; private set; }
-            = new ObservableCollection<BikePointRootObject>();
+        public static ObservableCollection<BikePointRootObject> BikePointCollection
+        { get; private set; }
+        = new ObservableCollection<BikePointRootObject>();
 
-        public static ObservableCollection<SuperCycleRootObject> SuperCycleCollection { get; private set; }
-            = new ObservableCollection<SuperCycleRootObject>();
+        public static ObservableCollection<SuperCycleRootObject> SuperCycleCollection
+        { get; private set; }
+        = new ObservableCollection<SuperCycleRootObject>();
 
-        public static CabWiseRootObject CabWiseCollection { get; private set; }
-            = new CabWiseRootObject();
+        public static CabWiseRootObject CabWiseCollection
+        { get; private set; }
+        = new CabWiseRootObject();
 
         private readonly List<Scenario> _scenarios = new List<Scenario>
         {
@@ -91,6 +96,31 @@ namespace London_Universal.Views
             BikePointCollection = await DataFetch.BikePointsTask();
             SuperCycleCollection = await DataFetch.SuperHighwaysTask();
             CabWiseCollection = await DataFetch.CabWiseTask();
+
+            var internetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
+
+            if (internetConnectionProfile == null)
+            {
+                var nointernetDialog = new MessageDialog(
+                    "It seems that you don't have an internet connection. Please try again.",
+                    "No Internet connection :(")
+                {
+                    Options = MessageDialogOptions.AcceptUserInputAfterDelay
+                };
+                await nointernetDialog.ShowAsync();
+            }
+
+            var access = await Geolocator.RequestAccessAsync();
+
+            if (access == GeolocationAccessStatus.Denied)
+            {
+                var nolocationDialog = new MessageDialog(
+                    "Sorry. This app relies on your location to function. Please allow you to access it via your settings",
+                    "We don't have access to your location :(");
+                nolocationDialog.Commands.Add(new UICommand("Okay", command => Application.Current.Exit()));
+                nolocationDialog.Options = MessageDialogOptions.AcceptUserInputAfterDelay;
+                await nolocationDialog.ShowAsync();
+            }
         }
 
         private void MainPage_OnLoaded(object sender, RoutedEventArgs e)

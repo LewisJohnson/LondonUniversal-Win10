@@ -45,7 +45,7 @@
                         <Setter Target="SearchCombo.(RelativePanel.AlignRightWithPanel)" Value="True"/>
                         <Setter Target="SearchCombo.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
                         <Setter Target="SearchCombo.HorizontalAlignment" Value="Stretch"/>
-                        <Setter Target="SearchCombo.Margin" Value="20,10,40,10"/>
+                        <Setter Target="SearchCombo.Margin" Value="20,50,20,10"/>
                         <Setter Target="SearchCombo.(RelativePanel.LeftOf)" Value=""/>
 
                         <Setter Target="SearchBox.Margin" Value="20,0"/>
@@ -98,6 +98,7 @@
                     <ComboBox x:Name="SearchCombo" SelectedIndex="0" SelectionChanged="Selector_OnSelectionChanged" >
                         <ComboBoxItem Content="Bike"/>
                         <ComboBoxItem Content="Superhighways"/>
+                        <ComboBoxItem Content="CabWise"/>
                         <ComboBoxItem Content="Tube" IsEnabled="False"/>
                         <ComboBoxItem Content="Overground" IsEnabled="False"/>
                         <ComboBoxItem Content="Bus" IsEnabled="False"/>
@@ -108,7 +109,13 @@
                     <MenuFlyoutSeparator x:Name="AppBarSeparator"  RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="SearchBox"/>
                     
                     <ScrollViewer RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWithPanel="True" RelativePanel.Below="AppBarSeparator" Margin="10,5,10,50" ZoomMode="Disabled" >
-                        <ListView x:Name="SearchListView" HorizontalAlignment="Stretch" ItemClick="SearchList_OnSelectionChanged" IsItemClickEnabled="True"/>
+                        <ListView x:Name="SearchListView" HorizontalAlignment="Stretch" ItemClick="SearchList_OnSelectionChanged" IsItemClickEnabled="True" >
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                        <TextBlock TextWrapping="Wrap" Text="{Binding}"/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
                     </ScrollViewer>
                 </RelativePanel>
             </SplitView.Pane>
@@ -121,10 +128,10 @@
             </RelativePanel>
         </SplitView>
 
-        <Border x:Name="SearchBorder" Grid.Column="1" Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}" Height="54" VerticalAlignment="Top">
-            <ToggleButton Style="{StaticResource SymbolButton}"  Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Tapped="Search_OnClick">
+        <Border Tapped="Search_OnClick" x:Name="SearchBorder" Grid.Column="1" Background="{ThemeResource TransDodgerBlue}" Height="54" VerticalAlignment="Top" CornerRadius="90" Margin="15,15">
+            <ToggleButton Style="{StaticResource SymbolButton}">
                 <ToggleButton.Content>
-                    <FontIcon x:Name="SearchIcon" FontFamily="Segoe MDL2 Assets" Glyph="&#xE11A;" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <FontIcon x:Name="SearchIcon" FontFamily="Segoe MDL2 Assets" Glyph="&#xE11A;" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
                 </ToggleButton.Content>
             </ToggleButton>
         </Border>
