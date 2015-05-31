@@ -1,5 +1,10 @@
 ﻿using System.Collections.Generic;
 
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable InconsistentNaming
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+
 namespace London_Universal.DataModels
 {
 
@@ -50,7 +55,6 @@ namespace London_Universal.DataModels
 
     public class Operators
     {
-
         public List<CabWiseOperatorList> operatorList { get; set; }
     }
 

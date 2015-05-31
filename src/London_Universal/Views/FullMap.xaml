@@ -7,6 +7,7 @@
     xmlns:maps="using:Windows.UI.Xaml.Controls.Maps"
     mc:Ignorable="d"
     Loading="MapPage_Loading" Loaded="MapPage_OnLoaded" SizeChanged="FullMap_OnSizeChanged">
+    
 
     <Page.BottomAppBar>
         <CommandBar x:Name="CommandBar">

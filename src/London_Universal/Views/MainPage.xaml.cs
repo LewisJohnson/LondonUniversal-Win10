@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Windows.Devices.Geolocation;
 using Windows.Networking.Connectivity;
+using Windows.Storage;
 using Windows.System;
-using Windows.UI;
 using Windows.UI.Popups;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -78,7 +77,7 @@ namespace London_Universal.Views
         private void ScenarioControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var scenarioListBox = sender as ListBox;
-            var s = scenarioListBox.SelectedItem as Scenario;
+            var s = scenarioListBox?.SelectedItem as Scenario;
             if (s != null)
             {
                 HolderFrame.Navigate(s.ClassType);
@@ -125,17 +124,10 @@ namespace London_Universal.Views
 
         private void MainPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            var roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+            var roamingSettings = ApplicationData.Current.RoamingSettings;
             var value = roamingSettings.Values["NotFirstRun"];
 
-            if (value?.ToString() == "False")
-            {
-                ScenarioControl.SelectedIndex = 2;
-                roamingSettings.Values["NotFirstRun"] = true;
-                HolderFrame.Navigate(typeof(About));
-                Splitter.IsPaneOpen = false;
-            }
-            else if (value == null)
+            if (value == null)
             {
                 ScenarioControl.SelectedIndex = 2;
                 roamingSettings.Values["NotFirstRun"] = true;
@@ -163,7 +155,7 @@ namespace London_Universal.Views
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             var s = value as Scenario;
-            return s.Title;
+            return s?.Title;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

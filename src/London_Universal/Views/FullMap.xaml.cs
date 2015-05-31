@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
@@ -82,8 +80,8 @@ namespace London_Universal.Views
 
         private async void UpdateMapView()
         {
-            MapControl.MapElements.Clear();
-            MapControl.Routes.Clear();
+            MapControl?.MapElements.Clear();
+            MapControl?.Routes.Clear();
 
             if (MainPage.ShowBikePins)
             {
@@ -101,76 +99,77 @@ namespace London_Universal.Views
                     NormalizedAnchorPoint = new Point(0.5, 1.0)
                 }))
                 {
-                    MapControl.MapElements.Add(mapIcon);
+                    MapControl?.MapElements.Add(mapIcon);
                 }
             }
 
             if (MainPage.ShowSuperHighways)
             {
-                foreach (var cycleRoutes in MainPage.SuperCycleCollection)
-                {
-                    if (cycleRoutes.Geography.Type == SuperCyleHighwayType.LineString.ToString())
+                    foreach (var cycleRoutes in MainPage.SuperCycleCollection)
                     {
-                        var line = new MapPolyline();
-                        var route = cycleRoutes.Geography.Coordinates.Select(loc => new BasicGeoposition
+                        if (cycleRoutes.Geography.Type == SuperCyleHighwayType.LineString.ToString())
                         {
-                            Latitude = double.Parse(loc[1].ToString()),
-                            Longitude = double.Parse(loc[0].ToString())
-                        }).ToList();
+                            var line = new MapPolyline();
+                            var route = cycleRoutes.Geography.Coordinates.Select(loc => new BasicGeoposition
+                            {
+                                Latitude = double.Parse(loc[1].ToString()),
+                                Longitude = double.Parse(loc[0].ToString())
+                            }).ToList();
 
-                        line.Path = new Geopath(route);
-                        line.StrokeColor = Colors.Chartreuse;
-                        line.StrokeThickness = 5;
+                            line.Path = new Geopath(route);
+                            line.StrokeColor = Colors.Chartreuse;
+                            line.StrokeThickness = 5;
 
-                        MapControl.MapElements.Add(line);
+                            MapControl?.MapElements.Add(line);
 
+                        }
+                        else if (cycleRoutes.Geography.Type == SuperCyleHighwayType.MultiLineString.ToString())
+                        {
+                            var line = new MapPolyline();
+
+                            var route = (from subItem in cycleRoutes.Geography.Coordinates
+                                from loc in subItem.Cast<JArray>()
+                                select new BasicGeoposition
+                                {
+                                    Latitude = double.Parse(loc[1].ToString()),
+                                    Longitude = double.Parse(loc[0].ToString())
+                                }).ToList();
+
+                            line.Path = new Geopath(route);
+
+                            var rand = new Random();
+
+                            line.StrokeColor = Color.FromArgb(255,
+                                byte.Parse(rand.Next(0, 255).ToString()),
+                                byte.Parse(rand.Next(0, 255).ToString()),
+                                byte.Parse(rand.Next(0, 255).ToString()));
+
+                            line.StrokeDashed = true;
+                            line.StrokeThickness = 5;
+                            MapControl?.MapElements.Add(line);
+                        }
                     }
-                    else if (cycleRoutes.Geography.Type == SuperCyleHighwayType.MultiLineString.ToString())
-                    {
-                        var line = new MapPolyline();
-
-                        var route = (from subItem in cycleRoutes.Geography.Coordinates
-                                     from loc in subItem.Cast<JArray>()
-                                     select new BasicGeoposition
-                                     {
-                                         Latitude = double.Parse(loc[1].ToString()),
-                                         Longitude = double.Parse(loc[0].ToString())
-                                     }).ToList();
-
-                        line.Path = new Geopath(route);
-
-                        var rand = new Random();
-
-                        line.StrokeColor = Color.FromArgb(255,
-                            byte.Parse(rand.Next(0, 255).ToString()),
-                            byte.Parse(rand.Next(0, 255).ToString()),
-                            byte.Parse(rand.Next(0, 255).ToString()));
-
-                        line.StrokeDashed = true;
-                        line.StrokeThickness = 5;
-                        MapControl.MapElements.Add(line);
-                    }
-                }
+                
             }
 
             if (MainPage.ShowCabWise)
             {
-                foreach (var item in MainPage.CabWiseCollection.operators.operatorList.Select(item => new MapIcon
-                {
-                    Image =
-                        RandomAccessStreamReference.CreateFromUri(
-                            new Uri("ms-appx:///Assets/cabwise-pushpin-icon.png")),
-                    Location = new Geopoint(new BasicGeoposition
+                    foreach (var item in MainPage.CabWiseCollection.operators.operatorList.Select(item => new MapIcon
                     {
-                        Latitude = item.latitude,
-                        Longitude = item.longitude
-                    }),
-                    Title = "CabWise",
-                    NormalizedAnchorPoint = new Point(0.5, 1.0)
-                }))
-                {
-                    MapControl.MapElements.Add(item);
-                }
+                        Image =
+        RandomAccessStreamReference.CreateFromUri(
+            new Uri("ms-appx:///Assets/cabwise-pushpin-icon.png")),
+                        Location = new Geopoint(new BasicGeoposition
+                        {
+                            Latitude = item.latitude,
+                            Longitude = item.longitude
+                        }),
+                        Title = "CabWise",
+                        NormalizedAnchorPoint = new Point(0.5, 1.0)
+                    }))
+                    {
+                        MapControl?.MapElements.Add(item);
+                    }
             }
 
             //Add user icon
@@ -219,6 +218,7 @@ namespace London_Universal.Views
 
         private void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
         {
+            // ReSharper disable PossibleNullReferenceException
             var selectedItem = sender as ToggleMenuFlyoutItem;
 
             switch (selectedItem?.Tag.ToString())
@@ -240,8 +240,10 @@ namespace London_Universal.Views
                     break;
                 case "CabWise":
                     MainPage.ShowCabWise = selectedItem.IsChecked;
+
                     break;
             }
+            // ReSharper restore PossibleNullReferenceException
             UpdateMapView();
         }
 
@@ -264,6 +266,10 @@ namespace London_Universal.Views
                         CabWiseInfoBox(item, element);
                     }
                     break;
+
+                case "Me":
+                    await new MessageDialog("You are here").ShowAsync();
+                    break;
             }
 
         }
@@ -276,7 +282,7 @@ namespace London_Universal.Views
         {
             var stack = sender as StackPanel;
             var directions = stack?.Children.First() as ToggleButton;
-            var expandInfoToggle = stack.Children.Last() as ToggleButton;
+            var expandInfoToggle = stack?.Children.Last() as ToggleButton;
 
 
             switch (e.OriginalSource.ToString())
@@ -430,8 +436,7 @@ namespace London_Universal.Views
             var infoBox = new StackPanel
             {
                 Opacity = 0,
-                BorderBrush = new SolidColorBrush(Colors.WhiteSmoke),
-                BorderThickness = new Thickness(1)
+                Style = (Style)Application.Current.Resources["InfoBox"]
             };
             var name = new TextBlock
             {
@@ -590,80 +595,14 @@ namespace London_Universal.Views
             {
                 l.Children.Add(property4);
             }
-
-
-            var moveAnim = new DoubleAnimation
-            {
-                Duration = new Duration(TimeSpan.FromSeconds(0.1)),
-                To = 1,
-                EasingFunction = new ExponentialEase()
-            };
-            var moveAnim2 = new DoubleAnimation
-            {
-                Duration = new Duration(TimeSpan.FromSeconds(0.2)),
-                To = 1,
-                EasingFunction = new ExponentialEase()
-            };
-            var moveAnim3 = new DoubleAnimation
-            {
-                Duration = new Duration(TimeSpan.FromSeconds(0.3)),
-                To = 1,
-                EasingFunction = new ExponentialEase()
-            };
-            var moveAnim4 = new DoubleAnimation
-            {
-                Duration = new Duration(TimeSpan.FromSeconds(0.4)),
-                To = 1,
-                EasingFunction = new ExponentialEase()
-            };
-            var moveAnim5 = new DoubleAnimation
-            {
-                Duration = new Duration(TimeSpan.FromSeconds(0.5)),
-                To = 1,
-                EasingFunction = new ExponentialEase()
-            };
-            var moveAnim6 = new DoubleAnimation
-            {
-                Duration = new Duration(TimeSpan.FromSeconds(0.5)),
-                To = 1,
-                EasingFunction = new ExponentialEase()
-            };
-            var sb = new Storyboard
-            {
-                Duration = new Duration(TimeSpan.FromSeconds(0.5))
-            };
-
-            sb.Children.Add(moveAnim);
-            sb.Children.Add(moveAnim2);
-            sb.Children.Add(moveAnim3);
-            sb.Children.Add(moveAnim4);
-            sb.Children.Add(moveAnim5);
-            sb.Children.Add(moveAnim6);
-
-            Storyboard.SetTarget(moveAnim, property8);
-            Storyboard.SetTarget(moveAnim2, property0);
-            Storyboard.SetTarget(moveAnim3, property1);
-            Storyboard.SetTarget(moveAnim4, property2);
-            Storyboard.SetTarget(moveAnim5, property3);
-            Storyboard.SetTarget(moveAnim6, property5);
-
-            Storyboard.SetTargetProperty(moveAnim, "Opacity");
-            Storyboard.SetTargetProperty(moveAnim2, "Opacity");
-            Storyboard.SetTargetProperty(moveAnim3, "Opacity");
-            Storyboard.SetTargetProperty(moveAnim4, "Opacity");
-            Storyboard.SetTargetProperty(moveAnim5, "Opacity");
-            Storyboard.SetTargetProperty(moveAnim6, "Opacity");
-
-            sb.Begin();
         }
 
         private void CabWiseInfoBox(CabWiseOperatorList item, MapIcon cabElement)
         {
             var infoBox = new StackPanel
             {
-                Opacity = 0,
-                BorderBrush = new SolidColorBrush(Colors.WhiteSmoke),
-                BorderThickness = new Thickness(1)
+                Style = (Style)Application.Current.Resources["InfoBox"],
+                Opacity = 0
             };
             var name = new TextBlock
             {
@@ -711,7 +650,6 @@ namespace London_Universal.Views
                 VerticalAlignment = VerticalAlignment.Stretch
             };
 
-
             var dirBtn = new ToggleButton
             {
                 Content = "Directions",
@@ -736,7 +674,7 @@ namespace London_Universal.Views
             infoBox.Children.Add(emptyDocks);
             infoBox.Children.Add(expand);
 
-            infoBox.Background = new SolidColorBrush(Color.FromArgb(255, 116, 116, 116));
+
             MapControl.SetLocation(infoBox, new Geopoint(new BasicGeoposition
             {
                 Latitude = cabElement.Location.Position.Latitude,
@@ -756,11 +694,11 @@ namespace London_Universal.Views
             {
                 Duration = new Duration(TimeSpan.FromSeconds(0.3))
             };
-
+            
             sb.Children.Add(opacityAnim);
             Storyboard.SetTarget(opacityAnim, infoBox);
             Storyboard.SetTargetProperty(opacityAnim, "Opacity");
-
+            
             sb.Begin();
 
             infoBox.Tapped +=
@@ -768,7 +706,6 @@ namespace London_Universal.Views
                     CabWiseBoxOnTapped(o, eventArgs, item, item.latitude,
                         item.longitude);
         }
-
         private static void CabWiseExtendedInfoBox(CabWiseOperatorList item, StackPanel l)
         {
             var email = new TextBlock
@@ -804,7 +741,6 @@ namespace London_Universal.Views
 
 
             l.Children.Add(email);
-
 
             if (item.hoursOfOperation24X7)
             {

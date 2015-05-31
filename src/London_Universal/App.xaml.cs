@@ -31,8 +31,8 @@ namespace London_Universal
         {
             TelemetryClient = new TelemetryClient();
 
-            this.InitializeComponent();
-            this.Suspending += OnSuspending;
+            InitializeComponent();
+            Suspending += OnSuspending;
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace London_Universal
 #if DEBUG
             if (Debugger.IsAttached)
             {
-                this.DebugSettings.EnableFrameRateCounter = true;
+                DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
 

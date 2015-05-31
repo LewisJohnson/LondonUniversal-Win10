@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Windows.Data.Json;
 using Newtonsoft.Json;
 
 // ReSharper disable ClassNeverInstantiated.Global

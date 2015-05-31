@@ -1,15 +1,17 @@
-﻿using System;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Maps;
 
+// ReSharper disable PossibleNullReferenceException
+// ReSharper disable PossibleInvalidOperationException
+
 namespace London_Universal.Views
 {
-    public sealed partial class Settings : Page
+    public sealed partial class Settings
     {
         public Settings()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         private void Features_OnClick(object sender, RoutedEventArgs e)

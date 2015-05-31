@@ -1,11 +1,22 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:London_Universal">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <SolidColorBrush x:Key="TransDodgerBlue">
         <SolidColorBrush.Color>#991E90FF</SolidColorBrush.Color>
     </SolidColorBrush>
+    
+    <Style x:Key="InfoBox" TargetType="StackPanel">
+        <Setter Property="BorderBrush" Value="WhiteSmoke"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="#FF747474"/>
+        <Setter Property="ChildrenTransitions" Value="{ThemeResource InfoBoxTrans}"/>
+    </Style>
+    
+    <TransitionCollection x:Key="InfoBoxTrans">
+        <AddDeleteThemeTransition/>
+        <EntranceThemeTransition/>
+    </TransitionCollection>
 
     <Style x:Key="SymbolButton" TargetType="ToggleButton">
         <Setter Property="Background" Value="{ThemeResource ToggleButtonBackgroundThemeBrush}"/>
