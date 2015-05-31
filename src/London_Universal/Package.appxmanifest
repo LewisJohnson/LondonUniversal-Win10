@@ -14,7 +14,7 @@
   <mp:PhoneIdentity PhoneProductId="1eebf5f3-4a64-4ee7-b9ee-733f371b9d90" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>London Universal-TEST</DisplayName>
+    <DisplayName>London Universal</DisplayName>
     <PublisherDisplayName>Lewis Johnson</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>

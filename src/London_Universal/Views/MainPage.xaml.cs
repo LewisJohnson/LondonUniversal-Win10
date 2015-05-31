@@ -60,10 +60,22 @@ namespace London_Universal.Views
 
         #endregion
 
+        public MainPage(List<bool> cmd)
+        {
+
+            ShowBusPins = cmd[0];
+            ShowBikePins = cmd[1];
+            ShowOysterPins = cmd[2];
+            ShowTubePins = cmd[3];
+            ShowSuperHighways = cmd[4];
+            ShowCabWise = cmd[5];
+            InitializeComponent();
+
+        }
+
         public MainPage()
         {
             InitializeComponent();
-
         }
 
         #region Click Events
@@ -87,6 +99,7 @@ namespace London_Universal.Views
 
         #endregion
 
+        #region Load
         private async void MainPage_OnLoading(FrameworkElement sender, object args)
         {
             ScenarioControl.ItemsSource = _scenarios;
@@ -139,6 +152,10 @@ namespace London_Universal.Views
             }
 
         }
+
+        #endregion
+
+
     }
 
     #region Scenario

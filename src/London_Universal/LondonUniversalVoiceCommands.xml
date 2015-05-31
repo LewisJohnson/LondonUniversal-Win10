@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<VoiceCommands xmlns="http://schemas.microsoft.com/voicecommands/1.2">
+  <CommandSet xml:lang="en-us" Name="LondonUniversalCommandSet">
+
+    <CommandPrefix> London Universal, </CommandPrefix>
+    <Example> Show bike points </Example>
+
+    <Command Name="showTripToDestination">
+      <Example > Show Cab Wise </Example>
+      <ListenFor  RequireAppName="BeforeOrAfterPhrase"> show {maptype} </ListenFor>
+      <Feedback> Showing {maptype} </Feedback>
+      <Navigate />
+    </Command>
+
+
+    <PhraseList Label="maptype">
+      <Item> Bike Point </Item>
+      <Item> Cab Wise </Item>
+      <Item> Superhighway </Item>
+      <Item> Tubes </Item>
+      <Item> Bus </Item>
+      <Item> Overground </Item>
+    </PhraseList>
+  
+  </CommandSet>
+</VoiceCommands>

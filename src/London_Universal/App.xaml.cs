@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -33,7 +34,73 @@ namespace London_Universal
 
             InitializeComponent();
             Suspending += OnSuspending;
+            
         }
+
+        protected async override void OnActivated(IActivatedEventArgs e)
+        {
+            var storageFile = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///LondonUniversalVoiceCommands.xml"));
+            await  Windows.ApplicationModel.VoiceCommands.VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(storageFile);
+
+            // Was the app activated by a voice command?
+            if (e.Kind != ActivationKind.VoiceCommand)
+            {
+                return;
+            }
+
+            var commandArgs = e as VoiceCommandActivatedEventArgs;
+
+            var result = commandArgs?.Result;
+
+            // Get the name of the voice command and the text spoken
+            var voiceCommandName = result.RulePath[0];
+
+            var rootFrame = Window.Current.Content as Frame;
+
+            switch (voiceCommandName)
+            {
+                /*
+
+            ShowBusPins = cmd[0];
+            ShowBikePins = cmd[1];
+            ShowOysterPins = cmd[2];
+            ShowTubePins = cmd[3];
+            ShowSuperHighways = cmd[4];
+            ShowCabWise = cmd[5];  
+            */
+                case "showTripToDestination":
+                    // Access the value of the {destination} phrase in the voice command
+                    var destination = result.SemanticInterpretation.Properties["maptype"][0];
+                    if (destination.Contains("Bike"))
+                    {
+                        var cmd = new List<bool> { false, true, false, false, false, false };
+
+                        rootFrame?.Navigate(typeof(MainPage), cmd);
+                    }
+                    else if (destination.Contains("Cab"))
+                    {
+                        var cmd = new List<bool> { false, false, false, false, false, true };
+
+                        rootFrame?.Navigate(typeof(MainPage), cmd);
+                    }
+                    else if (destination.Contains("Super"))
+                    {
+                        var cmd = new List<bool> { false, false, false, false, true, false };
+
+                        rootFrame?.Navigate(typeof(MainPage), cmd);
+                    }
+                    break;
+
+                default:
+                    rootFrame?.Navigate(typeof(MainPage));
+                    break;
+            }
+            if (rootFrame == null)
+            {
+                rootFrame.Navigate(typeof (MainPage));
+            }
+        }
+
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
@@ -58,7 +125,7 @@ namespace London_Universal
             }
 #endif
 
-            Frame rootFrame = Window.Current.Content as Frame;
+            var rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
