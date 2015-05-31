@@ -24,27 +24,33 @@ namespace London_Universal.Views
         public static bool ShowOysterPins;
         public static bool ShowTubePins;
         public static bool ShowSuperHighways;
+        public static bool ShowCabWise;
 
-        public static ObservableCollection<BikePointRootObject> BikePointCollection
-        { get; private set; } = new ObservableCollection<BikePointRootObject>();
+        public static ObservableCollection<BikePointRootObject> BikePointCollection { get; private set; }
+            = new ObservableCollection<BikePointRootObject>();
 
-        public static ObservableCollection<SuperCycleRootObject> SuperCycleCollection
-        { get; private set; } = new ObservableCollection<SuperCycleRootObject>();
+        public static ObservableCollection<SuperCycleRootObject> SuperCycleCollection { get; private set; }
+            = new ObservableCollection<SuperCycleRootObject>();
+
+        public static CabWiseRootObject CabWiseCollection { get; private set; }
+            = new CabWiseRootObject();
 
         private readonly List<Scenario> _scenarios = new List<Scenario>
         {
             new Scenario
             {
-                Title = "Map", ClassType = typeof (FullMap)
-            
+                Title = "Map",
+                ClassType = typeof (FullMap)
             },
             new Scenario
             {
-                Title = "Settings", ClassType = typeof (Settings)
+                Title = "Settings",
+                ClassType = typeof (Settings)
             },
             new Scenario
             {
-                Title = "About", ClassType = typeof (About)
+                Title = "About",
+                ClassType = typeof (About)
             }
         };
 
@@ -53,7 +59,7 @@ namespace London_Universal.Views
         public MainPage()
         {
             InitializeComponent();
-            
+
         }
 
         #region Click Events
@@ -84,6 +90,7 @@ namespace London_Universal.Views
 
             BikePointCollection = await DataFetch.BikePointsTask();
             SuperCycleCollection = await DataFetch.SuperHighwaysTask();
+            CabWiseCollection = await DataFetch.CabWiseTask();
         }
 
         private void MainPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -137,4 +144,3 @@ namespace London_Universal.Views
 
     #endregion
 }
- 

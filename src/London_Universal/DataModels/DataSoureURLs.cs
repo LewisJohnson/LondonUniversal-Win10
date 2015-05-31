@@ -34,7 +34,13 @@
             const string baseS = "http://api.tfl.gov.uk/CycleSuperhighway?app_id={0}&app_key={1}";
             return string.Format(baseS, AppId, AppKey);
         }
-        
+
+        public static string CabWiseSpots()
+        {
+            const string baseS = "https://api.tfl.gov.uk/Cabwise?legacyFormat=False&forceXml=False&app_id={0}&app_key={1}";
+            return string.Format(baseS, AppId, AppKey);
+        }
+
 
     }
 }

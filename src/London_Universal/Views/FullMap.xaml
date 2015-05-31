@@ -18,6 +18,7 @@
                     <MenuFlyout x:Name="LayersMenuFlyout">
                         <ToggleMenuFlyoutItem Text="Bike" Tag="Bike" Click="MenuFlyoutItem_OnClick"/>
                         <ToggleMenuFlyoutItem Text="Cycle Superhighways" Tag="CycleSuper" Click="MenuFlyoutItem_OnClick"/>
+                        <ToggleMenuFlyoutItem Text="Cabwise" Tag="CabWise" Click="MenuFlyoutItem_OnClick"/>
                         <MenuFlyoutSeparator />
                         <ToggleMenuFlyoutItem Text="Bus" Tag="Bus" Click="MenuFlyoutItem_OnClick" IsEnabled="False"/>
                         <ToggleMenuFlyoutItem Text="Tube &amp; Overground" Tag="Tube" Click="MenuFlyoutItem_OnClick" IsEnabled="False"/>

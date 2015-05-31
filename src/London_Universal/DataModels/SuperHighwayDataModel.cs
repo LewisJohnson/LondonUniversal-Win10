@@ -9,23 +9,16 @@ namespace London_Universal.DataModels
 {
     public class SuperCycleGeography
     {
-
-
         public string Type { get; set; }
-
         public object[][] Coordinates { get; set; }
     }
 
 
     public class SuperCycleRootObject
     {
-
         public string Id { get; set; }
-
         public string Label { get; set; }
-
         public SuperCycleGeography Geography { get; set; }
-
         public bool Segmented { get; set; }
 
     }
@@ -36,5 +29,5 @@ namespace London_Universal.DataModels
         MultiLineString
     }
 
-        
+
 }

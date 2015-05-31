@@ -21,7 +21,7 @@ using Newtonsoft.Json.Linq;
 
 namespace London_Universal.Views
 {
-    public sealed partial class FullMap
+    public partial class FullMap
     {
         #region Properties
 
@@ -37,7 +37,8 @@ namespace London_Universal.Views
         private readonly MapIcon _userLocationIcon = new MapIcon
         {
             Title = "Me",
-            NormalizedAnchorPoint = new Point(0.5, 1.0)
+            NormalizedAnchorPoint = new Point(0.5, 1.0),
+            CollisionBehaviorDesired = MapElementCollisionBehavior.RemainVisible
         };
 
         private MapRouteView _bikeMapRoute;
@@ -99,9 +100,6 @@ namespace London_Universal.Views
             MapControl.MapElements.Clear();
             MapControl.Routes.Clear();
 
-            //Add user icon
-            await UsersLocation(false);
-
             if (MainPage.ShowBikePins)
             {
                 foreach (var mapIcon in MainPage.BikePointCollection.Select(item => new MapIcon
@@ -124,12 +122,12 @@ namespace London_Universal.Views
 
             if (MainPage.ShowSuperHighways)
             {
-                foreach (var item in MainPage.SuperCycleCollection)
+                foreach (var cycleRoutes in MainPage.SuperCycleCollection)
                 {
-                    if (item.Geography.Type == SuperCyleHighwayType.LineString.ToString())
+                    if (cycleRoutes.Geography.Type == SuperCyleHighwayType.LineString.ToString())
                     {
                         var line = new MapPolyline();
-                        var route = item.Geography.Coordinates.Select(loc => new BasicGeoposition
+                        var route = cycleRoutes.Geography.Coordinates.Select(loc => new BasicGeoposition
                         {
                             Latitude = double.Parse(loc[1].ToString()),
                             Longitude = double.Parse(loc[0].ToString())
@@ -142,11 +140,11 @@ namespace London_Universal.Views
                         MapControl.MapElements.Add(line);
 
                     }
-                    else if (item.Geography.Type == SuperCyleHighwayType.MultiLineString.ToString())
+                    else if (cycleRoutes.Geography.Type == SuperCyleHighwayType.MultiLineString.ToString())
                     {
                         var line = new MapPolyline();
 
-                        var route = (from subItem in item.Geography.Coordinates
+                        var route = (from subItem in cycleRoutes.Geography.Coordinates
                                      from loc in subItem.Cast<JArray>()
                                      select new BasicGeoposition
                                      {
@@ -169,6 +167,29 @@ namespace London_Universal.Views
                     }
                 }
             }
+
+            if (MainPage.ShowCabWise)
+            {
+                foreach (var item in MainPage.CabWiseCollection.operators.operatorList.Select(item => new MapIcon
+                {
+                    Image =
+                        RandomAccessStreamReference.CreateFromUri(
+                            new Uri("ms-appx:///Assets/cabwise-pushpin-icon.png")),
+                    Location = new Geopoint(new BasicGeoposition
+                    {
+                        Latitude = item.latitude,
+                        Longitude = item.longitude
+                    }),
+                    Title = "CabWise",
+                    NormalizedAnchorPoint = new Point(0.5, 1.0)
+                }))
+                {
+                    MapControl.MapElements.Add(item);
+                }
+            }
+
+            //Add user icon
+            await UsersLocation(false);
         }
 
         private void FullMap_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -230,6 +251,9 @@ namespace London_Universal.Views
                 case "CycleSuper":
                     MainPage.ShowSuperHighways = selectedItem.IsChecked;
                     break;
+                case "CabWise":
+                    MainPage.ShowCabWise = selectedItem.IsChecked;
+                    break;
             }
             UpdateMapView();
         }
@@ -244,6 +268,13 @@ namespace London_Universal.Views
                     foreach (var item in MainPage.BikePointCollection.Where(item => element != null && item.lat == element.Location.Position.Latitude))
                     {
                         await BikeInfoBox(item, element);
+                    }
+                    break;
+
+                case "CabWise":
+                    foreach (var item in MainPage.CabWiseCollection.operators.operatorList.Where(item => element != null && item.latitude == element.Location.Position.Latitude))
+                    {
+                        await CabWiseInfoBox(item, element);
                     }
                     break;
             }
@@ -268,7 +299,7 @@ namespace London_Universal.Views
 
                     if (directions != null && directions.IsChecked == true)
                     {
-                        await BikeNewDirections(lat, lon);
+                        await NewDirections(lat, lon);
                     }
                     if (expandInfoToggle != null && expandInfoToggle.IsChecked == true)
                     {
@@ -306,7 +337,7 @@ namespace London_Universal.Views
             }
         }
 
-        private async Task BikeNewDirections(double lat, double lon)
+        private async Task NewDirections(double lat, double lon)
         {
             // Start at user location
 
@@ -586,6 +617,85 @@ namespace London_Universal.Views
                     new MessageDialog(
                         "This bikepoint is only temporary. Be sure to check the status before arriving.",
                         "Woah.").ShowAsync();
+        }
+
+
+        private async Task CabWiseInfoBox(CabWiseOperatorList item, MapIcon cabElement)
+        {
+            var infoBox = new StackPanel
+            {
+                Opacity = 0,
+                BorderBrush = new SolidColorBrush(Colors.WhiteSmoke),
+                BorderThickness = new Thickness(1)
+            };
+            var name = new TextBlock
+            {
+                Text = "Name: " + item.tradingName,
+                Foreground = new SolidColorBrush(Colors.White),
+                Margin = new Thickness(5)
+            };
+            var address = new TextBlock
+            {
+                Text = "Address: " + item.addressLine1 + " " + item.addressLine2,
+                Foreground = new SolidColorBrush(Colors.White),
+                Margin = new Thickness(5),
+                TextWrapping = TextWrapping.Wrap
+            };
+            
+            var emptyDocks = new TextBlock
+            {
+                Text = "Number: " + item.bookingsPhoneNumber,
+                Foreground = new SolidColorBrush(Colors.White),
+                Margin = new Thickness(5)
+            };
+
+
+            var dirBtn = new ToggleButton
+            {
+                Content = "Directions",
+                Foreground = new SolidColorBrush(Colors.White),
+                FontSize = 10,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch
+            };
+
+            infoBox.Children.Add(dirBtn);
+            infoBox.Children.Add(name);
+            infoBox.Children.Add(address);
+            infoBox.Children.Add(emptyDocks);
+
+            infoBox.Background = new SolidColorBrush(Color.FromArgb(255, 116, 116, 116));
+            MapControl.SetLocation(infoBox, new Geopoint(new BasicGeoposition
+            {
+                Latitude = cabElement.Location.Position.Latitude,
+                Longitude = cabElement.Location.Position.Longitude
+            }));
+
+            MapControl.SetNormalizedAnchorPoint(infoBox, new Point(0, 0));
+            MapControl.Children.Add(infoBox);
+
+            var opacityAnim = new DoubleAnimation
+            {
+                Duration = new Duration(TimeSpan.FromSeconds(0.3)),
+                To = 0.85,
+                EasingFunction = new ExponentialEase()
+            };
+            var sb = new Storyboard
+            {
+                Duration = new Duration(TimeSpan.FromSeconds(0.3))
+            };
+
+            sb.Children.Add(opacityAnim);
+            Storyboard.SetTarget(opacityAnim, infoBox);
+            Storyboard.SetTargetProperty(opacityAnim, "Opacity");
+
+            sb.Begin();
+            dirBtn.Tapped +=
+                async delegate
+                {
+                    await NewDirections(cabElement.Location.Position.Latitude, cabElement.Location.Position.Longitude);
+                };
+            infoBox.Tapped += (sender, args) => MapControl.Children.Remove(infoBox);
         }
 
         #endregion

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Windows.Data.Json;
 using Newtonsoft.Json;
 
 // ReSharper disable ClassNeverInstantiated.Global
@@ -26,6 +27,15 @@ namespace London_Universal.DataModels
             var response = await new HttpClient().SendAsync(request);
             var data = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<ObservableCollection<SuperCycleRootObject>>(data);
+        }
+
+        public static async Task<CabWiseRootObject> CabWiseTask()
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, DataSoureUrLs.CabWiseSpots());
+            var response = await new HttpClient().SendAsync(request);
+            var data = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<CabWiseRootObject>(data);
+
         }
 
 
