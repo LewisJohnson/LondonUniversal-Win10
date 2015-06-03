@@ -127,7 +127,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="BasicTextStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
+    <Style x:Key="BasicTextStyle" TargetType="TextBlock">
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="Margin" Value="0,0,0,10"/>
     </Style>
@@ -147,28 +147,6 @@
         <Setter Property="FontSize" Value="18"/>
     </Style>
 
-    <Style x:Key="GettingAroundSubHeaderTextStyle" TargetType="TextBlock" >
-        <Setter Property="FontWeight" Value="Normal"/>
-        <Setter Property="Margin" Value="2,0,0,2"/>
-        <Setter Property="FontFamily" Value="Segoe UI Light"/>
-        <Setter Property="FontSize" Value="22"/>
-    </Style>
-
-    <Style x:Key="AboutMapSubHeadingTextStyle" TargetType="TextBlock" >
-        <Setter Property="FontWeight" Value="Normal"/>
-        <Setter Property="Margin" Value="5,0,0,2"/>
-        <Setter Property="FontFamily" Value="Segoe UI Light"/>
-        <Setter Property="FontSize" Value="18"/>
-        <Setter Property="Foreground" Value="Gray"></Setter>
-    </Style>
-    
-    <Style x:Key="AboutBaseTextStyle" TargetType="TextBlock" >
-        <Setter Property="FontWeight" Value="Normal"/>
-        <Setter Property="Margin" Value="7,0,0,10"/>
-        <Setter Property="FontFamily" Value="Segoe UI Light"/>
-        <Setter Property="TextWrapping" Value="Wrap"/>
-        
-    </Style>
 
     <Style x:Key="AboutLicenseNameStyle" TargetType="TextBlock" >
         <Setter Property="FontWeight" Value="Normal"/>
@@ -184,39 +162,13 @@
         <Setter Property="FontFamily" Value="Segoe UI Light"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
         <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextAlignment" Value="Justify"></Setter>
     </Style>
-
-    <x:String x:Key="TflThanks-SubHeader">Transport For London (TFL)</x:String>
-    <x:String x:Key="TflThanks-Body">Data is provided free of charge by TFL and is updated as said at https://tfl.gov.uk. I would personally like to thank TFL. They provide the majority of the data for this app. They also provided some graphics for the app.</x:String>
-
-    <x:String x:Key="Me-SubHeader">Developer</x:String>
-    <x:String x:Key="Me-Body">Hey user! I'm Lewis Johnson and developed this app for Londeners such as yourself. I hope you enjoy it, it took me countless hours to make. The product you're looking at now is actually and evolution of an app called "Cycle London" for Windows 8.x and Windows 8.1 Phone, which I made just before this.</x:String>
 
     <x:String x:Key="LoveLondon-Body">Created with ♥ in London</x:String>
 
-    <x:String x:Key="AboutMapPins-SubHeader">Map Pins</x:String>
-    <x:String x:Key="AboutMapPins-Body">Map Pins are the little icons on the map. Tapping these icons will open a panel which shows you informaion about the tapped icon. The panel will contain infomartion like Opening times, Bikes available to hire and more!
-    </x:String>
-    
-    <x:String x:Key="AboutAppBar-SubHeader">App Bar</x:String>
-    <x:String x:Key="AboutAppBar-Body">
-        The App Bar is found at the bottom of the map. The App Bar holds primary controls for the map, including map layers (Such as Bikepoints and CabWise) and pinpoint your location, other map settings (Like Landmarks) are found in the Settings tab.
-    </x:String>
+    <x:String x:Key="OwnerString">© 2015 Lewis Johnson. &#x0a; All rights reserved.</x:String>
 
-    <x:String x:Key="AboutSearch-SubHeader">Search</x:String>
-    <x:String x:Key="AboutSearch-Body">
-        Search is found on the upper right of the map. 
-        With search you can look through all of the locations on the map, such as a Bus stop or Bike point.
-    </x:String>
-    
-    <x:String x:Key="AboutMaps-SubHeader">Maps</x:String>
-    <x:String x:Key="AboutApp-SubHeader">App</x:String>
-
-    <x:String x:Key="OwnerString">© Lewis Johnson. All rights reserved.</x:String>
-
-
-    <x:String x:Key="AboutTabNavigaton-SubHeader">Tab Navigaton</x:String>
-    <x:String x:Key="AboutTabNavigaton-Body">On the left is where you can see which tab is selected, as well as select a new tab.</x:String>
 
     <x:String x:Key="About3RdParty-Header">3ʳᵈ Party licenses</x:String>
     <x:String x:Key="AboutJson-SubHeader">Json.NET</x:String>
@@ -257,25 +209,16 @@
         <Setter Property="FontFamily" Value="Segoe UI Semilight"/>
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="Margin" Value="10,0,0,0"/>
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="Gray"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
 
     </Style>
 
-    <Style x:Key="CopyrightTextStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
+    <Style x:Key="CopyrightTextStyle" TargetType="TextBlock">
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="Foreground" Value="White"/>
     </Style>
-
-    <Style x:Key="ScenarioHeaderTextStyle" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Segoe UI Light"/>
-        <Setter Property="FontSize" Value="26.667"/>
-    </Style>
-
-    <Style x:Key="ScenarioDescriptionTextStyle" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Segoe UI Light"/>
-        <Setter Property="FontSize" Value="16"/>
-    </Style>
+    
 
     <Style x:Key="BaseMessageStyle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Segoe UI Semilight"/>

@@ -6,7 +6,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" Loading="Settings_OnLoading">
 
-    <ScrollViewer>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -37,39 +36,33 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <RelativePanel Margin="10,0" x:Name="MainPanel" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-            <StackPanel x:Name="MapPanel" RelativePanel.AlignLeftWithPanel="True">
-                <TextBlock x:Name="MapHeader" TextWrapping="Wrap" Text="Map" Style="{StaticResource AboutHeaderTextStyle}"  Margin="10"/>
+    <RelativePanel Margin="10,0" x:Name="MainPanel">
+        <StackPanel x:Name="MapPanel" RelativePanel.AlignLeftWithPanel="True">
 
-                <ComboBox x:Name="StyleCombo" Header="Style" Margin="10,10" SelectionChanged="StyleCombo_OnSelectionChanged" HorizontalAlignment="Stretch">
-                    <ComboBoxItem Content="Road" Tag="Road"/>
-                    <ComboBoxItem Content="Aerial" Tag="Aerial"/>
-                    <ComboBoxItem Content="Aerial With Roads" Tag="AerialRoadS"/>
-                </ComboBox>
+            <ComboBox x:Name="StyleCombo" Header="Style" Margin="10,10" SelectionChanged="StyleCombo_OnSelectionChanged" HorizontalAlignment="Stretch">
+                <ComboBoxItem Content="Road" Tag="Road"/>
+                <ComboBoxItem Content="Aerial" Tag="Aerial"/>
+                <ComboBoxItem Content="Aerial With Roads" Tag="AerialRoadS"/>
+            </ComboBox>
 
-                <ComboBox x:Name="ColourCombo" Header="Colour Scheme"  Margin="10,10"  SelectionChanged="Colour_OnSelectionChanged" HorizontalAlignment="Stretch">
-                    <ComboBoxItem Content="Light"/>
-                    <ComboBoxItem Content="Dark"/>
-                </ComboBox>
+            <ComboBox x:Name="ColourCombo" Header="Colour Scheme"  Margin="10,10"  SelectionChanged="Colour_OnSelectionChanged" HorizontalAlignment="Stretch">
+                <ComboBoxItem Content="Light"/>
+                <ComboBoxItem Content="Dark"/>
+            </ComboBox>
 
 
-                <CheckBox x:Name="LandMarksCheckBox" Margin="10,0" Click="Features_OnClick" Tag="LandMarks"
+            <CheckBox x:Name="LandMarksCheckBox" Margin="10,0" Click="Features_OnClick" Tag="LandMarks"
                           Content="Show 3D Landmarks" />
-                <CheckBox x:Name="TrafficCheckBox" Margin="10,0" Click="Features_OnClick" Tag="Traffic"
+            <CheckBox x:Name="TrafficCheckBox" Margin="10,0" Click="Features_OnClick" Tag="Traffic"
                           Content="Show Traffic" />
-                <CheckBox x:Name="BusinessCheckBox" Margin="10,0" Click="Features_OnClick" Tag="Businesses"
+            <CheckBox x:Name="BusinessCheckBox" Margin="10,0" Click="Features_OnClick" Tag="Businesses"
                           Content="Show Business Landmarks" />
-                <CheckBox x:Name="PedeCheckBox" Margin="10,0" Click="Features_OnClick" Tag="Pede"
+            <CheckBox x:Name="PedeCheckBox" Margin="10,0" Click="Features_OnClick" Tag="Pede"
                           Content="Show Pedestrians Features" />
-                <CheckBox x:Name="ControlsCheckBox" Margin="10,0" Click="Features_OnClick" Tag="ForceControls"
+            <CheckBox x:Name="ControlsCheckBox" Margin="10,0" Click="Features_OnClick" Tag="ForceControls"
                           Content="Force Onscreen Controls" />
 
-            </StackPanel>
-            <StackPanel x:Name="AboutPanel" RelativePanel.RightOf="MapPanel"  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                <TextBlock TextWrapping="Wrap" Text=" " Style="{StaticResource SampleHeaderTextStyle}"  Margin="10"/>
+        </StackPanel>
 
-            </StackPanel>
-
-        </RelativePanel>
-    </ScrollViewer>
+    </RelativePanel>
 </Page>

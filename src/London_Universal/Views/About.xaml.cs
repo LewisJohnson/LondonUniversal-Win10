@@ -1,4 +1,6 @@
 ﻿
+using Windows.UI.Xaml;
+
 namespace London_Universal.Views
 {
     /// <summary>
@@ -9,6 +11,14 @@ namespace London_Universal.Views
         public About()
         {
             InitializeComponent();
+        }
+
+
+        private void About_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            ScrollViewer.
+            MainPage._AboutItem.Visibility = Visibility.Collapsed;
+            AboutPage.Height = Window.Current.Bounds.Height;
         }
     }
 }

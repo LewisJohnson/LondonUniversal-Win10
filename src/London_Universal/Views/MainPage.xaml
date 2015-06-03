@@ -3,60 +3,56 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:views="using:London_Universal.Views"
+    xmlns:maps="using:Windows.UI.Xaml.Controls.Maps"
     x:Class="London_Universal.Views.MainPage"
-    mc:Ignorable="d" 
-    x:Name="mainPage" Loading="MainPage_OnLoading" Loaded="MainPage_OnLoaded">
+    mc:Ignorable="d"
+    x:Name="mainPage" Loading="MainPage_OnLoading" Loaded="MainPage_OnLoaded" SizeChanged="MainPage_OnSizeChanged">
 
-    <Page.Resources>
-        <views:ScenarioBindingConverter x:Key="ScenarioConverter"/>
 
-    </Page.Resources>
-    
+
     <Grid x:Name="Grid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <SplitView  Grid.Column="1" x:Name="Splitter" DisplayMode="Overlay">
-            <SplitView.Pane>
-                <RelativePanel Background="#0081FF">
-                   
-                    <ListBox x:Name="ScenarioControl" SelectionChanged="ScenarioControl_SelectionChanged"
-                 SelectionMode="Single" HorizontalAlignment="Left" Style="{StaticResource ScenarioListBoxStyle}"
-                 VerticalAlignment="Top" Margin="0,10,0,0" RelativePanel.Above="FooterPanel" RelativePanel.AlignTopWithPanel="True">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Converter={StaticResource ScenarioConverter}}" Style="{StaticResource ListItemTextStyle}"/>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <StackPanel Margin="0,0,0,40" x:Name="FooterPanel" Orientation="Vertical" RelativePanel.AlignBottomWithPanel="True">
 
-                        <TextBlock x:Name="Copyright" Text="&#xA9; Lewis Johnson. All rights reserved." Style="{StaticResource CopyrightTextStyle}"
-                                   RelativePanel.Above="LinksPanel" Margin="10,10,0,0"
-                                   TextWrapping="Wrap"/>
-                        <StackPanel x:Name="LinksPanel" Orientation="Horizontal" Margin="15,10,0,10">
-                            <HyperlinkButton x:Name="PrivacyLink" Content="Privacy" Tag="http://lewisj489.github.io/Cycle-London-Universal/privacy" Click="Footer_Click" FontSize="12" Style="{StaticResource HyperlinkStyle}"/>
-                        </StackPanel>
-                    </StackPanel>
-                </RelativePanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <SplitView  Grid.Row="1" x:Name="Splitter" DisplayMode="Inline">
+            <SplitView.Pane>
+                <StackPanel Background="White">
+                    <Frame CacheSize="2" x:Name="SettingsFrame"/>
+                    <ListBox Margin="5">
+                        <ListViewItem x:Name="AboutItem" Content="About" Tapped="About_OnTapped" Foreground="Gray"/>
+                    </ListBox>
+                </StackPanel>
             </SplitView.Pane>
-            <RelativePanel>
-                <Frame x:Name="HolderFrame" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True"/>
-            </RelativePanel>
+            <maps:MapControl  
+            x:Name="MapControl" 
+            RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" 
+            RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True"
+            MapElementClick="MapControl_OnMapElementClick" />
         </SplitView>
 
-        <Border Grid.Column="0" Background="DodgerBlue" Tapped="Hamburger_Click">
-            <ToggleButton Style="{StaticResource SymbolButton}" VerticalAlignment="Top" Foreground="{ThemeResource ApplicationForegroundThemeBrush}">
+        <RelativePanel Grid.Row="0" Background="DodgerBlue" >
+
+            <SearchBox x:Name="GlobalSearch" RelativePanel.LeftOf="LayersMapIcon" ToolTipService.ToolTip="Global Search" Width="200" RelativePanel.AlignVerticalCenterWith="SettingsButton"  Margin="5" FocusOnKeyboardInput="True" SearchHistoryEnabled="False" QuerySubmitted="SearchBox_OnQuerySubmitted"/>
+
+            <ToggleButton x:Name="SettingsButton" RelativePanel.AlignLeftWithPanel="True" Style="{StaticResource SymbolButton}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Tapped="Hamburger_Click" RelativePanel.AlignVerticalCenterWithPanel="True">
                 <ToggleButton.Content>
-                    <FontIcon Foreground="White" x:Name="Hamburger" FontFamily="Segoe MDL2 Assets" Glyph="&#xE700;" Margin="0,10,0,0"/>
+                    <FontIcon Foreground="White" x:Name="Settings" FontFamily="Segoe MDL2 Assets" Glyph="&#xE115;" Margin="5" ToolTipService.ToolTip="Settings"/>
                 </ToggleButton.Content>
             </ToggleButton>
-        </Border>
+
+            <ToggleButton x:Name="LayersMapIcon"  RelativePanel.LeftOf="FindMeMapIcon" Style="{StaticResource SymbolButton}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Tapped="Layers_Click" RelativePanel.AlignVerticalCenterWithPanel="True">
+                <ToggleButton.Content>
+                    <FontIcon Foreground="White" FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" Margin="5" ToolTipService.ToolTip="Settings"/>
+                </ToggleButton.Content>
+            </ToggleButton>
+
+            <ToggleButton Click="FindYou_OnClick" x:Name="FindMeMapIcon" RelativePanel.AlignRightWithPanel="True" Style="{StaticResource SymbolButton}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Tapped="Hamburger_Click" RelativePanel.AlignVerticalCenterWithPanel="True">
+                <ToggleButton.Content>
+                    <SymbolIcon Foreground="White" Symbol="MapPin"  Margin="5" ToolTipService.ToolTip="Find You"/>
+                </ToggleButton.Content>
+            </ToggleButton>
+        </RelativePanel>
     </Grid>
-    
-    
-
-
 </Page>

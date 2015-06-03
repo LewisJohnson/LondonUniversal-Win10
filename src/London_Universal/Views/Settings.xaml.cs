@@ -21,23 +21,23 @@ namespace London_Universal.Views
             switch (item?.Tag.ToString())
             {
                 case "LandMarks":
-                    FullMap.LandMarks = item.IsChecked.Value;
+                    MainPage.LandMarks = item.IsChecked.Value;
                     break;
 
                 case "Pede":
-                    FullMap.PedeFeat = item.IsChecked.Value;
+                    MainPage.PedeFeat = item.IsChecked.Value;
                     break;
 
                 case "Traffic":
-                    FullMap.Traffic = item.IsChecked.Value;
+                    MainPage.Traffic = item.IsChecked.Value;
                     break;
 
                 case "ForceControls":
-                    FullMap.ForceControls = item.IsChecked.Value;
+                    MainPage.ForceControls = item.IsChecked.Value;
                     break;
 
                 case "Businesses":
-                    FullMap.BusinessFeat = item.IsChecked.Value;
+                    MainPage.BusinessFeat = item.IsChecked.Value;
                     break;
             }
         }
@@ -49,15 +49,15 @@ namespace London_Universal.Views
             switch (sel.SelectedIndex)
             {
                 case 0:
-                    FullMap.MapStyle = MapStyle.Road;
+                    MainPage.MapStyle = MapStyle.Road;
                     break;
 
                 case 1:
-                    FullMap.MapStyle = MapStyle.Aerial;
+                    MainPage.MapStyle = MapStyle.Aerial;
                     break;
 
                 case 2:
-                    FullMap.MapStyle = MapStyle.AerialWithRoads;
+                    MainPage.MapStyle = MapStyle.AerialWithRoads;
                     break;
             }
         }
@@ -69,27 +69,27 @@ namespace London_Universal.Views
             switch (sel.SelectedIndex)
             {
                 case 0:
-                    FullMap.MapColorScheme = MapColorScheme.Light;
+                    MainPage.MapColorScheme = MapColorScheme.Light;
                     break;
 
                 case 1:
-                    FullMap.MapColorScheme = MapColorScheme.Dark;
+                    MainPage.MapColorScheme = MapColorScheme.Dark;
                     break;
             }
         }
 
         private void Settings_OnLoading(FrameworkElement sender, object args)
         {
-            if (!FullMap.Is3DEnabled)
+            if (!MainPage.Is3DEnabled)
                 LandMarksCheckBox.IsEnabled = false;
 
-            LandMarksCheckBox.IsChecked = FullMap.LandMarks;
-            PedeCheckBox.IsChecked = FullMap.PedeFeat;
-            TrafficCheckBox.IsChecked = FullMap.Traffic;
-            ControlsCheckBox.IsChecked = FullMap.ForceControls;
-            BusinessCheckBox.IsChecked = FullMap.BusinessFeat;
+            LandMarksCheckBox.IsChecked = MainPage.LandMarks;
+            PedeCheckBox.IsChecked = MainPage.PedeFeat;
+            TrafficCheckBox.IsChecked = MainPage.Traffic;
+            ControlsCheckBox.IsChecked = MainPage.ForceControls;
+            BusinessCheckBox.IsChecked = MainPage.BusinessFeat;
 
-            switch (FullMap.MapStyle)
+            switch (MainPage.MapStyle)
             {
                 case MapStyle.Road:
                     StyleCombo.SelectedIndex = 0;
@@ -105,7 +105,7 @@ namespace London_Universal.Views
 
             }
 
-            switch (FullMap.MapColorScheme)
+            switch (MainPage.MapColorScheme)
             {
                 case MapColorScheme.Light:
                     ColourCombo.SelectedIndex = 0;

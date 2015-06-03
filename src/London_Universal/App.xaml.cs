@@ -109,13 +109,13 @@ namespace London_Universal
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            FullMap.LandMarks = false;
-            FullMap.Traffic = false;
-            FullMap.BusinessFeat = false;
-            FullMap.PedeFeat = false;
-            FullMap.ForceControls = false;
-            FullMap.MapStyle = MapStyle.Road;
-            FullMap.MapColorScheme = MapColorScheme.Light;
+            MainPage.LandMarks = false;
+            MainPage.Traffic = false;
+            MainPage.BusinessFeat = false;
+            MainPage.PedeFeat = false;
+            MainPage.ForceControls = false;
+            MainPage.MapStyle = MapStyle.Road;
+            MainPage.MapColorScheme = MapColorScheme.Light;
 
 
 #if DEBUG
