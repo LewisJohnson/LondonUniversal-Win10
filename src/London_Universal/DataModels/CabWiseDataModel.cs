@@ -13,7 +13,6 @@ namespace London_Universal.DataModels
         public int operatorId { get; set; }
         public string organisationName { get; set; }
         public string tradingName { get; set; }
-        public List<object> alsoKnownAs { get; set; }
         public int centreId { get; set; }
         public string addressLine1 { get; set; }
         public string addressLine2 { get; set; }
@@ -28,7 +27,6 @@ namespace London_Universal.DataModels
         public bool wheelchairAccessible { get; set; }
         public bool creditDebitCard { get; set; }
         public bool chequeBankersCard { get; set; }
-        public bool accountServicesAvailable { get; set; }
         public bool hoursOfOperation24X7 { get; set; }
         public bool hoursOfOperationMonThu { get; set; }
         public string startTimeMonThu { get; set; }
@@ -45,12 +43,9 @@ namespace London_Universal.DataModels
         public bool hoursOfOperationPubHol { get; set; }
         public string startTimePubHol { get; set; }
         public string endTimePubHol { get; set; }
-        public int numberOfVehicles { get; set; }
-        public int numberOfVehiclesWheelchair { get; set; }
         public double longitude { get; set; }
         public double latitude { get; set; }
         public List<string> operatorTypes { get; set; }
-        public double distance { get; set; }
     }
 
     public class Operators

@@ -1,6 +1,6 @@
-﻿namespace London_Universal.DataModels
+﻿namespace London_Universal.Models
 {
-    static class DataSoureUrLs
+    static class Constants
     {
         private const string AppId = "4238c1bf";
         private const string AppKey = "eaf40b6c793133ac35d48fc1ec6eccdd";

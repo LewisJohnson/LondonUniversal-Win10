@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Maps;
 using Windows.UI.Xaml.Navigation;
 using London_Universal.Views;
 using Microsoft.ApplicationInsights;
@@ -17,7 +15,7 @@ namespace London_Universal
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    sealed partial class App : Application
+    sealed partial class App
     {
         /// <summary>
         /// Allows tracking page views, exceptions and other telemetry through the Microsoft Application Insights service.
@@ -37,69 +35,6 @@ namespace London_Universal
             
         }
 
-        protected async override void OnActivated(IActivatedEventArgs e)
-        {
-            var storageFile = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///LondonUniversalVoiceCommands.xml"));
-            await  Windows.ApplicationModel.VoiceCommands.VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(storageFile);
-
-            // Was the app activated by a voice command?
-            if (e.Kind != ActivationKind.VoiceCommand)
-            {
-                return;
-            }
-
-            var commandArgs = e as VoiceCommandActivatedEventArgs;
-
-            var result = commandArgs?.Result;
-
-            // Get the name of the voice command and the text spoken
-            var voiceCommandName = result.RulePath[0];
-
-            var rootFrame = Window.Current.Content as Frame;
-
-            switch (voiceCommandName)
-            {
-                /*
-
-            ShowBusPins = cmd[0];
-            ShowBikePins = cmd[1];
-            ShowOysterPins = cmd[2];
-            ShowTubePins = cmd[3];
-            ShowSuperHighways = cmd[4];
-            ShowCabWise = cmd[5];  
-            */
-                case "showTripToDestination":
-                    // Access the value of the {destination} phrase in the voice command
-                    var destination = result.SemanticInterpretation.Properties["maptype"][0];
-                    if (destination.Contains("Bike"))
-                    {
-                        var cmd = new List<bool> { false, true, false, false, false, false };
-
-                        rootFrame?.Navigate(typeof(MainPage), cmd);
-                    }
-                    else if (destination.Contains("Cab"))
-                    {
-                        var cmd = new List<bool> { false, false, false, false, false, true };
-
-                        rootFrame?.Navigate(typeof(MainPage), cmd);
-                    }
-                    else if (destination.Contains("Super"))
-                    {
-                        var cmd = new List<bool> { false, false, false, false, true, false };
-
-                        rootFrame?.Navigate(typeof(MainPage), cmd);
-                    }
-                    break;
-
-                default:
-                    rootFrame?.Navigate(typeof(MainPage));
-                    break;
-            }
-            if (rootFrame == null)
-            {
-                rootFrame.Navigate(typeof (MainPage));
-            }
-        }
 
 
         /// <summary>
@@ -109,13 +44,6 @@ namespace London_Universal
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            MainPage.LandMarks = false;
-            MainPage.Traffic = false;
-            MainPage.BusinessFeat = false;
-            MainPage.PedeFeat = false;
-            MainPage.ForceControls = false;
-            MainPage.MapStyle = MapStyle.Road;
-            MainPage.MapColorScheme = MapColorScheme.Light;
 
 
 #if DEBUG
